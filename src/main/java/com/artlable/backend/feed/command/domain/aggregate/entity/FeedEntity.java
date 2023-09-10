@@ -4,12 +4,16 @@ import com.artlable.backend.comment.command.domain.aggregate.entity.CommentEntit
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.file.command.domain.aggregate.entity.FileEntity;
 import com.artlable.backend.member.command.domain.aggregate.entity.MemberEntity;
+import lombok.Getter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "feed")
+@Getter
+@ToString
 public class FeedEntity extends AuditingFields {
 
     @Id
@@ -40,4 +44,19 @@ public class FeedEntity extends AuditingFields {
 
     @Column
     private int likeCount;
+
+    public FeedEntity() {
+
+    }
+
+    public FeedEntity(Long feedNo, String feedCategory, boolean feedIsDeleted, MemberEntity memberNo, List<FileEntity> fileNo, List<CommentEntity> commentList, boolean commentIsDeleted, int likeCount) {
+        this.feedNo = feedNo;
+        this.feedCategory = feedCategory;
+        this.feedIsDeleted = feedIsDeleted;
+        this.memberNo = memberNo;
+        this.fileNo = fileNo;
+        this.commentList = commentList;
+        this.commentIsDeleted = commentIsDeleted;
+        this.likeCount = likeCount;
+    }
 }
