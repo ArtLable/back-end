@@ -1,4 +1,8 @@
 package com.artlable.backend.member.command.domain.repository;
 
-public class MemberRepository {
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MemberRepository extends JpaRepository <Member, Long> {
+
 }
