@@ -32,4 +32,36 @@ public class FileEntity extends AuditingFields {
     @ManyToOne
     @JoinColumn(name = "feed_No")
     private FeedEntity feedNo;
+
+    public FileEntity() {
+
+    }
+
+    public FileEntity(Long fileNo, String fileName, String filePath, MemberEntity memberNo, FeedEntity feedNo) {
+        this.fileNo = fileNo;
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.memberNo = memberNo;
+        this.feedNo = feedNo;
+    }
+
+    public void setFileNo(Long fileNo) {
+        this.fileNo = fileNo;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setMemberNo(MemberEntity memberNo) {
+        this.memberNo = memberNo;
+    }
+
+    public void setFeedNo(FeedEntity feedNo) {
+        this.feedNo = feedNo;
+    }
 }

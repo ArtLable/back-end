@@ -34,4 +34,35 @@ public class CommentEntity extends AuditingFields {
 
     private boolean commentIsDeleted;
 
+    public CommentEntity() {
+
+    }
+
+    public CommentEntity(Long commentNo, FeedEntity feedNo, MemberEntity memberNo, String commentContent, boolean commentIsDeleted) {
+        this.commentNo = commentNo;
+        this.feedNo = feedNo;
+        this.memberNo = memberNo;
+        this.commentContent = commentContent;
+        this.commentIsDeleted = commentIsDeleted;
+    }
+
+    public void setCommentNo(Long commentNo) {
+        this.commentNo = commentNo;
+    }
+
+    public void setFeedNo(FeedEntity feedNo) {
+        this.feedNo = feedNo;
+    }
+
+    public void setMemberNo(MemberEntity memberNo) {
+        this.memberNo = memberNo;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
+
+    public void setCommentIsDeleted(boolean commentIsDeleted) {
+        this.commentIsDeleted = commentIsDeleted;
+    }
 }

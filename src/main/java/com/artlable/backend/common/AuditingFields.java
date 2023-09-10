@@ -29,5 +29,9 @@ public abstract class AuditingFields {
     @Column(name = "modified_date")
     protected LocalDateTime modifiedDate; // 수정일시
 
+    public AuditingFields() {
+        this.createdDate = LocalDateTime.now();
+        this.modifiedDate = LocalDateTime.now();
+    }
 }
 
