@@ -1,6 +1,7 @@
-package com.artlable.backend.feed.command.domain.aggregate.entity;
+package com.artlable.backend.savefeed;
 
 import com.artlable.backend.common.AuditingFields;
+import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -19,7 +20,7 @@ public class SaveFeed extends AuditingFields {
 
     @ManyToOne
     @JoinColumn
-    private FeedEntity feedNo;
+    private Feed feedNo;
 
     private boolean saveFeedIsDeleted;
 
@@ -27,7 +28,7 @@ public class SaveFeed extends AuditingFields {
 
     }
 
-    public SaveFeed(Long saveFeedNo, FeedEntity feedNo, boolean saveFeedIsDeleted) {
+    public SaveFeed(Long saveFeedNo, Feed feedNo, boolean saveFeedIsDeleted) {
         this.saveFeedNo = saveFeedNo;
         this.feedNo = feedNo;
         this.saveFeedIsDeleted = saveFeedIsDeleted;
@@ -37,7 +38,7 @@ public class SaveFeed extends AuditingFields {
         this.saveFeedNo = saveFeedNo;
     }
 
-    public void setFeedNo(FeedEntity feedNo) {
+    public void setFeedNo(Feed feedNo) {
         this.feedNo = feedNo;
     }
 

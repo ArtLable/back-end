@@ -1,20 +1,18 @@
 package com.artlable.backend.comment.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.feed.command.domain.aggregate.entity.FeedEntity;
-import com.artlable.backend.member.command.domain.aggregate.entity.MemberEntity;
+import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comment")
 @Getter
 @ToString
-public class CommentEntity extends AuditingFields {
+public class Comment extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,22 +21,22 @@ public class CommentEntity extends AuditingFields {
 
     @ManyToOne
     @JoinColumn(name = "feed_No")
-    private FeedEntity feedNo;
+    private Feed feedNo;
 
     @ManyToOne
     @JoinColumn(name = "member_no")
-    private MemberEntity memberNo;
+    private Member memberNo;
 
     @Column(name = "comment_content", length = 100)
     private String commentContent;
 
     private boolean commentIsDeleted;
 
-    public CommentEntity() {
+    public Comment() {
 
     }
 
-    public CommentEntity(Long commentNo, FeedEntity feedNo, MemberEntity memberNo, String commentContent, boolean commentIsDeleted) {
+    public Comment(Long commentNo, Feed feedNo, Member memberNo, String commentContent, boolean commentIsDeleted) {
         this.commentNo = commentNo;
         this.feedNo = feedNo;
         this.memberNo = memberNo;
@@ -50,11 +48,11 @@ public class CommentEntity extends AuditingFields {
         this.commentNo = commentNo;
     }
 
-    public void setFeedNo(FeedEntity feedNo) {
+    public void setFeedNo(Feed feedNo) {
         this.feedNo = feedNo;
     }
 
-    public void setMemberNo(MemberEntity memberNo) {
+    public void setMemberNo(Member memberNo) {
         this.memberNo = memberNo;
     }
 
