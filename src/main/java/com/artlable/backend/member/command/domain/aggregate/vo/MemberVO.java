@@ -16,8 +16,8 @@ import javax.persistence.Enumerated;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberVO {
 
-    @Column(length = 100, nullable = false)
-    private String memberName;
+    @Column(length = 20)
+    private String memberNickname;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -27,17 +27,16 @@ public class MemberVO {
     @Column
     private MemberAgeRange memberAgeRange;
 
-    public MemberVO(String memberName, MemberGender memberGender, MemberAgeRange memberAgeRange){
-        this.memberName = memberName;
+    public MemberVO(String memberNickname, MemberGender memberGender, MemberAgeRange memberAgeRange){
+        this.memberNickname = memberNickname;
         this.memberGender = memberGender;
         this.memberAgeRange = memberAgeRange;
     }
 
-    public MemberVO setMemberName(String memberName){
-        this.memberName = memberName;
+    public MemberVO setMemberNickname(String memberNickname){
+        this.memberNickname = memberNickname;
         return this;
     }
-
     public MemberVO setMemberGender(MemberGender memberGender){
         this.memberGender = memberGender;
         return this;
