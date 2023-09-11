@@ -1,8 +1,8 @@
 package com.artlable.backend.file.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.feed.command.domain.aggregate.entity.FeedEntity;
-import com.artlable.backend.member.command.domain.aggregate.entity.MemberEntity;
+import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "file")
 @Getter
 @ToString
-public class FileEntity extends AuditingFields {
+public class File extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,17 +27,17 @@ public class FileEntity extends AuditingFields {
 
     @ManyToOne
     @JoinColumn(name = "member_no")
-    private MemberEntity memberNo;
+    private Member memberNo;
 
     @ManyToOne
     @JoinColumn(name = "feed_No")
-    private FeedEntity feedNo;
+    private Feed feedNo;
 
-    public FileEntity() {
+    public File() {
 
     }
 
-    public FileEntity(Long fileNo, String fileName, String filePath, MemberEntity memberNo, FeedEntity feedNo) {
+    public File(Long fileNo, String fileName, String filePath, Member memberNo, Feed feedNo) {
         this.fileNo = fileNo;
         this.fileName = fileName;
         this.filePath = filePath;
@@ -57,11 +57,11 @@ public class FileEntity extends AuditingFields {
         this.filePath = filePath;
     }
 
-    public void setMemberNo(MemberEntity memberNo) {
+    public void setMemberNo(Member memberNo) {
         this.memberNo = memberNo;
     }
 
-    public void setFeedNo(FeedEntity feedNo) {
+    public void setFeedNo(Feed feedNo) {
         this.feedNo = feedNo;
     }
 }
