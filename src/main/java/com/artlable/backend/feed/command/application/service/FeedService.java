@@ -20,10 +20,6 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final ModelMapper modelMapper;
-    private Long feedNo;
-    private String feedContent;
-    private String feedCategory;
-    private LocalDateTime createdDate;
 
     @Autowired
     public FeedService(FeedRepository feedRepository, ModelMapper modelMapper) {
@@ -50,19 +46,14 @@ public class FeedService {
 
     @Transactional
     public Long registNewFeed(FeedRegistDTO newFeed, String auth) throws JsonProcessingException {
-        Map<String, String> authMap = feedRepository.readValue(auth, Map.class);
-
-        String id = String.valueOf(authMap.get("feedNo"));
-        Long feedNo = Long.parseLong(id);
+//        Map<String, String> authMap = feedRepository.readValue(auth, Map.class);
 
         if (auth.equals("")) {
             throw new IllegalArgumentException("비회원 접근");
         }
 
-        newFeed.setFeedNo(feedNo);
-        newFeed.setFeedContent(feedContent);
-        newFeed.setFeedCategory(feedCategory);
-        newFeed.setCreatedDate(createdDate);
+        newFeed.setFeedContent(newFeed.getFeedContent());
+        newFeed.setFeedCategory(newFeed.getFeedCategory());
 
         return feedRepository.save(modelMapper.map(newFeed, Feed.class)).getFeedNo();
     }
@@ -85,11 +76,11 @@ public class FeedService {
         FeedDeleteDTO feedDeleteDTO = new FeedDeleteDTO();
     }
 
-    public List<FeedListDTO> findFeedListBySearch(FeedSearchFilter feedSearchFilter) {
-
-        List<Feed> feeds = feedRepository.findFeedListBySearch(feedSearchFilter);
-
-        return feeds.stream().map(feed -> modelMapper.map(feed, FeedListDTO.class))
-                .collect(Collectors.toList());
-    }
+//    public List<FeedListDTO> findFeedListBySearch(FeedSearchFilter feedSearchFilter) {
+//
+////        List<Feed> feeds = feedRepository.findFeedListBySearch(feedSearchFilter);
+//
+////        return feeds.stream().map(feed -> modelMapper.map(feed, FeedListDTO.class))
+////                .collect(Collectors.toList());
+////    }
 }

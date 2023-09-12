@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "feed")
 @Getter
 @ToString
 public class Feed extends AuditingFields {
