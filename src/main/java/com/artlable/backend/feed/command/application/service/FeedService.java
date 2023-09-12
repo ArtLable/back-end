@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class FeedService {
 
     private final FeedRepository feedRepository;
-    private final FeedMapper feedMapper;
+//    private final FeedMapper feedMapper;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
 
@@ -37,10 +37,10 @@ public class FeedService {
     private Long feedNo;
 
     @Autowired
-    public FeedService(FeedRepository feedRepository, FeedMapper feedMapper, ModelMapper modelMapper,
+    public FeedService(FeedRepository feedRepository,  ModelMapper modelMapper,
                            ObjectMapper objectMapper) {
         this.feedRepository = feedRepository;
-        this.feedMapper = feedMapper;
+//        this.feedMapper = feedMapper;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
     }
