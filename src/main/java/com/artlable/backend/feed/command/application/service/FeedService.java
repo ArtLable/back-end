@@ -1,25 +1,16 @@
 package com.artlable.backend.feed.command.application.service;
 
-import com.artlable.backend.feed.command.application.dto.FeedDeleteDTO;
-import com.artlable.backend.feed.command.application.dto.FeedListDTO;
-import com.artlable.backend.feed.command.application.dto.FeedRegistDTO;
-import com.artlable.backend.feed.command.application.dto.FeedUpdateDTO;
+import com.artlable.backend.feed.command.application.dto.*;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
-import com.artlable.backend.feed.command.domain.repository.FeedMapper;
 import com.artlable.backend.feed.command.domain.repository.FeedRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import org.modelmapper.ModelMapper;
 import java.awt.print.Pageable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,23 +19,19 @@ import java.util.stream.Collectors;
 public class FeedService {
 
     private final FeedRepository feedRepository;
-//    private final FeedMapper feedMapper;
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
-
-    @PersistenceContext
-    private EntityManager entityManager;
     private Long feedNo;
+    private String feedContent;
+    private String feedCategory;
+    private LocalDateTime createdDate;
 
     @Autowired
-    public FeedService(FeedRepository feedRepository,  ModelMapper modelMapper,
-                           ObjectMapper objectMapper) {
+    public FeedService(FeedRepository feedRepository, ModelMapper modelMapper) {
         this.feedRepository = feedRepository;
-//        this.feedMapper = feedMapper;
         this.modelMapper = modelMapper;
-        this.objectMapper = objectMapper;
     }
 
+    /* 전체 조회 */
     public List<FeedListDTO> findAllFeeds(Pageable pageable) {
 
         List<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "feedNo"));
@@ -53,19 +40,29 @@ public class FeedService {
                 .collect(Collectors.toList());
     }
 
+    /* 일부 조회 */
+    public FeedListDTO findFeedById(Long feedNo) {
+
+        Feed foundFeed = feedRepository.findById(feedNo).get();
+
+        return modelMapper.map(foundFeed, FeedListDTO.class);
+    }
+
     @Transactional
     public Long registNewFeed(FeedRegistDTO newFeed, String auth) throws JsonProcessingException {
-        Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+        Map<String, String> authMap = feedRepository.readValue(auth, Map.class);
 
-        String id = String.valueOf(authMap.get("memberNo"));
-        Long memberNo = Long.parseLong(id);
+        String id = String.valueOf(authMap.get("feedNo"));
+        Long feedNo = Long.parseLong(id);
 
         if (auth.equals("")) {
             throw new IllegalArgumentException("비회원 접근");
         }
 
-        newFeed.setMemberNo(memberNo);
-        newFeed.setCreatedDate(new Date());
+        newFeed.setFeedNo(feedNo);
+        newFeed.setFeedContent(feedContent);
+        newFeed.setFeedCategory(feedCategory);
+        newFeed.setCreatedDate(createdDate);
 
         return feedRepository.save(modelMapper.map(newFeed, Feed.class)).getFeedNo();
     }
@@ -86,5 +83,13 @@ public class FeedService {
         feedRepository.delete(foundFeed);
 
         FeedDeleteDTO feedDeleteDTO = new FeedDeleteDTO();
+    }
+
+    public List<FeedListDTO> findFeedListBySearch(FeedSearchFilter feedSearchFilter) {
+
+        List<Feed> feeds = feedRepository.findFeedListBySearch(feedSearchFilter);
+
+        return feeds.stream().map(feed -> modelMapper.map(feed, FeedListDTO.class))
+                .collect(Collectors.toList());
     }
 }

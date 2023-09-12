@@ -11,7 +11,6 @@ import lombok.ToString;
 @ToString
 public class FeedSearchFilter {
 
-    private String type;
-    private String location;
-    private String date;
+    private String keyword;
+    private String hashtag;
 }
