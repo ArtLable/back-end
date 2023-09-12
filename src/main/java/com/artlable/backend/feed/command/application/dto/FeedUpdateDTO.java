@@ -10,28 +10,14 @@ import java.time.LocalDateTime;
 @Getter
 public class FeedUpdateDTO {
 
-    private Long feedNo;
-    private Member memberNo;
     private String feedContent;
     private String feedCategory;
-    private boolean feedIsDeleted;
     private LocalDateTime createdDate;
 
-    public FeedUpdateDTO(Long feedNo, Member memberNo, String feedContent, String feedCategory, boolean feedIsDeleted, LocalDateTime createdDate) {
-        this.feedNo = feedNo;
-        this.memberNo = memberNo;
+    public FeedUpdateDTO(String feedContent, String feedCategory, LocalDateTime createdDate) {
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.feedIsDeleted = feedIsDeleted;
         this.createdDate = createdDate;
-    }
-
-    public void setFeedNo(Long feedNo) {
-        this.feedNo = feedNo;
-    }
-
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
     }
 
     public void setFeedContent(String feedContent) {
@@ -40,10 +26,6 @@ public class FeedUpdateDTO {
 
     public void setFeedCategory(String feedCategory) {
         this.feedCategory = feedCategory;
-    }
-
-    public void setFeedIsDeleted(boolean feedIsDeleted) {
-        this.feedIsDeleted = feedIsDeleted;
     }
 
     public void setCreatedDate(LocalDateTime createdDate) {
