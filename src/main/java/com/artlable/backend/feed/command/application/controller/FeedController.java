@@ -34,7 +34,7 @@ public class FeedController {
         this.feedService = feedService;
     }
     @ApiOperation(value = "모든 피드 조회")
-    @GetMapping("/lists")
+    @GetMapping("/feeds")
     public ResponseEntity<ResponseMessage> findAllFeeds(@PageableDefault(size = 1) Pageable pageable) {
 
         HttpHeaders headers = new HttpHeaders();
@@ -42,8 +42,8 @@ public class FeedController {
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        List<FeedListDTO> lists = feedService.findAllFeeds((java.awt.print.Pageable) pageable);
-        responseMap.put("lists", lists);
+        List<FeedListDTO> feeds = feedService.findAllFeeds((java.awt.print.Pageable) pageable);
+        responseMap.put("feeds", feeds);
 
         return new ResponseEntity<>(
                 new ResponseMessage(200, "조회성공", responseMap),
@@ -51,23 +51,43 @@ public class FeedController {
                 HttpStatus.OK
         );
     }
-    @ApiOperation(value = "피드 작성")
-    @PostMapping("/lists")
+
+    @ApiOperation("피드 번호로 조회")
+    @GetMapping("/feeds/{feedNo}")
+    public ResponseEntity<ResponseMessage> findFeedById(@PathVariable Long feedNo) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        FeedListDTO foundFeed = feedService.findFeedById(feedNo);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("feeds", foundFeed);
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new ResponseMessage(200, "조회성공", responseMap));
+    }
+
+
+    @ApiOperation(value = "피드 추가/작성")
+    @PostMapping("/feeds")
     public ResponseEntity<?> registFeed(FeedRegistDTO newFeed, @RequestHeader(value = "Auth") String auth)
         throws JsonProcessingException {
 
         Long feedNo = feedService.registNewFeed(newFeed, auth);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/lists/regist/" + newFeed.getFeedNo()))
+                .created(URI.create("/api/v1/feeds/regist/" + newFeed.getFeedNo()))
                 .build();
     }
 
     @ApiOperation(value = "피드 수정")
     @PutMapping("/feeds/{feedNo}")
-    public ResponseEntity<?> modifyFeed(FeedUpdateDTO modifyFeed,
+    public ResponseEntity<?> modifyInfo(FeedUpdateDTO modifyInfo,
                                         @PathVariable Long feedNo) {
-        feedService.modifyFeed(modifyFeed, feedNo);
+        feedService.modifyFeed(modifyInfo, feedNo);
 
         return ResponseEntity
                 .created(URI.create("/api/v1/feeds/" + feedNo))
