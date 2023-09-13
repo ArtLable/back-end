@@ -34,4 +34,11 @@ public class Auth extends AuditingFields {
     @JoinColumn(name = "memberNo")
     private Member member;
 
+    public Auth(String tokenType, String accessToken, String refreshToken, MemberSocialLogin memberSocialLogin, Member member) {
+        this.tokenType = tokenType;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.memberSocialLogin = memberSocialLogin;
+        this.member = member;
+    }
 }

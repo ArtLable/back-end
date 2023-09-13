@@ -24,10 +24,10 @@ public class Member extends AuditingFields {
     @Column(length = 100, nullable = false, unique = true)
     private String memberEmail;
 
-    @Column(name = "member_pwd", length = 20)
+    @Column(length = 200)
     private String memberPwd;
 
-    @Column(length = 300)
+    @Column(length = 500)
     private String memberImage;
     //권한
     @Enumerated(EnumType.STRING)

@@ -60,25 +60,21 @@ public class SecurityConfig {
                 .antMatchers(
                         "/swagger-ui/index.html",
                         "/swagger/**", // swagger
-                        "/v1/api-docs", //front swagger
                         "/v1/docs", //ai swagger
-                        "/swagger-resources/**" //swager 리소스
+                        "/swagger-resources/**", //swager 리소스
+                        "/v1/feeds/**" // 게시글 향후 변경필요
 //                        "/webjars/**"
-                ).permitAll()
-                // 추후 예외처리 해야 하는 부분 추가
-
+                ).permitAll()  // 추후 예외처리 해야 하는 부분 추가
                 // CSRF 설정 Disable
                 .and()
                 // exception handling
                 .exceptionHandling()
 //                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
 //                .accessDeniedHandler(jwtAccessDeniedHandler)
-
                 // 시큐리티는 기본적으로 세션을 사용하지만 API 서버에선 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
                 // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
                 .and()
                 .formLogin().disable()
