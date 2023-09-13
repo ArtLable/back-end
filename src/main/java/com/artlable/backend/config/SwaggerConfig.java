@@ -21,7 +21,8 @@ public class SwaggerConfig {
 
         return new ApiInfoBuilder()
                 .title("ArtLable Backend API")
-                .description("Spring boot swagger")
+                .version("1.0")
+                .description("ArtLable Backend API 명세")
                 .build();
     }
 

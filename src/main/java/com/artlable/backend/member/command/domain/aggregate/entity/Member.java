@@ -2,14 +2,12 @@ package com.artlable.backend.member.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
-import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberSocialLogin;
 import com.artlable.backend.member.command.domain.aggregate.vo.MemberVO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity

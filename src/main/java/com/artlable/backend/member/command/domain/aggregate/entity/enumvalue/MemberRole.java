@@ -6,7 +6,6 @@ import lombok.Getter;
 public  enum MemberRole {
     GUEST("ROLE_GUEST","손님"),
     MEMBER("ROLE_MEMBER","사용자"),
-    MEMBER2("ROLE_MEMBER2","작가"),
     ADMIN("ROLE_ADMIN","관리자");
 
     private final String key;
