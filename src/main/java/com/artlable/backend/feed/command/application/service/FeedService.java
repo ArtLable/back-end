@@ -45,12 +45,11 @@ public class FeedService {
     }
 
     @Transactional
-    public Long registNewFeed(FeedRegistDTO newFeed, String auth) throws JsonProcessingException {
-//        Map<String, String> authMap = feedRepository.readValue(auth, Map.class);
+    public Long registNewFeed(FeedRegistDTO newFeed, String auth) throws JsonProcessingException { // 자바 객체를 json 문자열로 변환
 
-        if (auth.equals("")) {
-            throw new IllegalArgumentException("비회원 접근");
-        }
+//        if (auth.equals("")) {
+//            throw new IllegalArgumentException("비회원 접근");
+//        }
 
         newFeed.setFeedContent(newFeed.getFeedContent());
         newFeed.setFeedCategory(newFeed.getFeedCategory());
