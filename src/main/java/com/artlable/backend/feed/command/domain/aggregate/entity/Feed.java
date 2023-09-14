@@ -2,6 +2,7 @@ package com.artlable.backend.feed.command.domain.aggregate.entity;
 
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
+import com.artlable.backend.feed.command.application.dto.FeedListDTO;
 import com.artlable.backend.file.command.domain.aggregate.entity.File;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "feed")
 @Getter
 @ToString
 public class Feed extends AuditingFields {
@@ -27,58 +29,55 @@ public class Feed extends AuditingFields {
     @Column(name = "feed_category")
     private String feedCategory;
 
+    @Column(name = "feed_is_deleted")
     private boolean feedIsDeleted;
 
     @ManyToOne
     @JoinColumn(name = "member_no")
     private Member memberNo;
 
-    @OneToMany
-    @JoinColumn
-    @OrderBy("fileNo asc")
-    private List<File> fileNo;
+//    @OneToMany
+//    @JoinColumn(name = "file_no")
+//    @OrderBy("fileNo asc")
+//    private List<File> fileNo;
 
-    @OneToMany
-    @JoinColumn
-    @OrderBy("commentNo asc")
-    private List<Comment> commentList;
+//    @OneToMany
+//    @JoinColumn(name = "comment_no")
+//    @OrderBy("commentNo asc")
+//    private List<Comment> commentList;
 
+    @Column(name = "comment_is_deleted")
     private boolean commentIsDeleted;
 
-    @Column
+    @Column(name = "like_count")
     private int likeCount;
-
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
 
     public Feed() {
 
     }
 
-    public Feed(Long feedNo, String feedContent, String feedCategory, boolean feedIsDeleted, Member memberNo, List<File> fileNo, List<Comment> commentList, boolean commentIsDeleted, int likeCount, LocalDateTime createdDate) {
+    public Feed(Long feedNo, String feedContent, String feedCategory, boolean feedIsDeleted, Member memberNo, List<File> fileNo,
+                List<Comment> commentList, boolean commentIsDeleted, int likeCount) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
         this.feedIsDeleted = feedIsDeleted;
         this.memberNo = memberNo;
-        this.fileNo = fileNo;
-        this.commentList = commentList;
+//        this.fileNo = fileNo;
+//        this.commentList = commentList;
         this.commentIsDeleted = commentIsDeleted;
         this.likeCount = likeCount;
-        this.createdDate = createdDate;
     }
 
-    public void create(Long newFeedNo, String newFeedContent, String newFeedCategory, LocalDateTime newCreatedDate) {
+    public void create(Long newFeedNo, String newFeedContent, String newFeedCategory) {
         this.feedNo = newFeedNo;
         this.feedContent = newFeedContent;
         this.feedCategory = newFeedCategory;
-        this.createdDate = newCreatedDate;
 
     }
-    public void update(String feedContent, String feedCategory, LocalDateTime createdDate) {
+    public void update(String feedContent, String feedCategory) {
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.createdDate = createdDate;
     }
 
     public void delete() {
@@ -105,13 +104,13 @@ public class Feed extends AuditingFields {
         this.memberNo = memberNo;
     }
 
-    public void setFileNo(List<File> fileNo) {
-        this.fileNo = fileNo;
-    }
+//    public void setFileNo(List<File> fileNo) {
+//        this.fileNo = fileNo;
+//    }
 
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
+//    public void setCommentList(List<Comment> commentList) {
+//        this.commentList = commentList;
+//    }
 
     public void setCommentIsDeleted(boolean commentIsDeleted) {
         this.commentIsDeleted = commentIsDeleted;
@@ -119,9 +118,5 @@ public class Feed extends AuditingFields {
 
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
     }
 }

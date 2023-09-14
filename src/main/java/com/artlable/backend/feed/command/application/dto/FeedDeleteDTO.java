@@ -10,30 +10,19 @@ import lombok.Setter;
 public class FeedDeleteDTO {
 
     private Long feedNo;
-    private Member memberNo;
     private String feedContent;
-    private boolean feedIsDeleted;
 
-    public FeedDeleteDTO(Long feedNo, Member memberNo, String feedContent, boolean feedIsDeleted) {
+
+    public FeedDeleteDTO(Long feedNo, String feedContent) {
         this.feedNo = feedNo;
-        this.memberNo = memberNo;
         this.feedContent = feedContent;
-        this.feedIsDeleted = feedIsDeleted;
     }
 
     public void setFeedNo(Long feedNo) {
         this.feedNo = feedNo;
     }
 
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
-    }
-
     public void setFeedContent(String feedContent) {
         this.feedContent = feedContent;
-    }
-
-    public void setFeedIsDeleted(boolean feedIsDeleted) {
-        this.feedIsDeleted = feedIsDeleted;
     }
 }
