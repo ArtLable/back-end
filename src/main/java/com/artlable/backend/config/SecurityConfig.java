@@ -1,27 +1,27 @@
 package com.artlable.backend.config;
 
+import com.artlable.backend.jwt.JwtAccessDeniedHandler;
+import com.artlable.backend.jwt.JwtAuthenticationEntryPoint;
+import com.artlable.backend.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final TokenProvider tokenProvider;
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -30,60 +30,42 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        return null;
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration();
-        //로컬 CORS 허용
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Content-Type",
-                "Access-Control-Allow-Headers", "Authorization", "X-Requested-With", "Auth"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
-    @Order(1)
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        http
+        httpSecurity
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
-                .antMatchers("/api/v1/login/**").permitAll() //로그인
-                .antMatchers(
-                        "/swagger-ui/index.html",
-                        "/swagger/**", // swagger
-                        "/v1/docs", //ai swagger
-                        "/swagger-resources/**", //swager 리소스
-                        "/v1/feeds/**" // 게시글 향후 변경필요
-//                        "/webjars/**"
-                ).permitAll()  // 추후 예외처리 해야 하는 부분 추가
-                // CSRF 설정 Disable
-                .and()
-                // exception handling
+                //토큰사용시 CSRF 설정 Disable
+
                 .exceptionHandling()
-//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-//                .accessDeniedHandler(jwtAccessDeniedHandler)
-                // 시큐리티는 기본적으로 세션을 사용하지만 API 서버에선 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                // exception handling
+
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                // 로그인, 회원가입 API 는 토큰이 없는 상태에서 요청이 들어오기 때문에 permitAll 설정
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .cors();
-//                .and()
-                // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
-//                .apply(new JwtSecurityConfig(tokenProvider));
+                // 세션을 사용하지 않기 때문에 STATELESS로 설정
 
-        return http.build();
+                .and()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
+                .antMatchers("/api/v1/login/**").permitAll() //로그인
+                .antMatchers("/api/v1/signup/**").permitAll() //회원가입
+                .antMatchers( //swagger
+                        "/swagger-ui/**",
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                ).permitAll()
+//                .antMatchers(
+//                예외처리 필요할때 활성화
+//                )
+                .anyRequest().authenticated() // 그 외 인증 없이 접근X
+
+                .and()
+                .apply(new JwtConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtConfig class 적용
+
+
+        return httpSecurity.build();
     }
 }

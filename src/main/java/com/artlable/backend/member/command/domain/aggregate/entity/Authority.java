@@ -3,15 +3,17 @@ package com.artlable.backend.member.command.domain.aggregate.entity;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberSocialLogin;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Auth extends AuditingFields {
+public class Authority extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +36,9 @@ public class Auth extends AuditingFields {
     @JoinColumn(name = "memberNo")
     private Member member;
 
-    public Auth(String tokenType, String accessToken, String refreshToken, MemberSocialLogin memberSocialLogin, Member member) {
+    @Builder
+    public Authority(Long authNo, String tokenType, String accessToken, String refreshToken, MemberSocialLogin memberSocialLogin, Member member){
+        this.authNo = authNo;
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
