@@ -13,13 +13,11 @@ public class FeedRegistDTO {
     private Long feedNo;
     private String feedContent;
     private String feedCategory;
-    private LocalDateTime createdDate;
 
-    public FeedRegistDTO(Long feedNo, String feedContent, String feedCategory, LocalDateTime createdDate) {
+    public FeedRegistDTO(Long feedNo, String feedContent, String feedCategory) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.createdDate = createdDate;
     }
 
     public void setFeedNo(Long feedNo) {
@@ -34,7 +32,4 @@ public class FeedRegistDTO {
         this.feedCategory = feedCategory;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
 }
