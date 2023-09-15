@@ -15,4 +15,5 @@ public  enum MemberRole {
         this.key = key;
         this.title = title;
     }
+
 }
