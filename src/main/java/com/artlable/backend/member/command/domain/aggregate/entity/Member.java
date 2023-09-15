@@ -2,14 +2,12 @@ package com.artlable.backend.member.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
-import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberSocialLogin;
-import com.artlable.backend.member.command.domain.aggregate.vo.MemberVO;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -39,7 +37,7 @@ public class Member extends AuditingFields {
 
     //소셜 로그인 테이블 조인
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Auth> auth;
+    private List<Authority> auth;
 
     @Builder
     public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage, MemberRole memberRole, List<Authority> auth){
