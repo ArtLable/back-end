@@ -1,5 +1,6 @@
 package com.artlable.backend.feed.command.application.service;
 
+import com.artlable.backend.common.page.Pagenation;
 import com.artlable.backend.feed.command.application.dto.*;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.feed.command.domain.repository.FeedRepository;
@@ -9,10 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
-import java.awt.print.Pageable;
-import java.time.LocalDateTime;
+
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +27,7 @@ public class FeedService {
     }
 
     /* 전체 조회 */
-    public List<FeedListDTO> findAllFeeds(Pageable pageable) {
+    public List<FeedListDTO> findAllFeeds(Pagenation pagenation) {
 
         List<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "feedNo"));
 
@@ -45,12 +44,11 @@ public class FeedService {
     }
 
     @Transactional
-    public Long registNewFeed(FeedRegistDTO newFeed, String auth) throws JsonProcessingException {
-//        Map<String, String> authMap = feedRepository.readValue(auth, Map.class);
+    public Long registNewFeed(FeedRegistDTO newFeed) throws JsonProcessingException { // 자바 객체를 json 문자열로 변환
 
-        if (auth.equals("")) {
-            throw new IllegalArgumentException("비회원 접근");
-        }
+//        if (auth.equals("")) {
+//            throw new IllegalArgumentException("비회원 접근");
+//        }
 
         newFeed.setFeedContent(newFeed.getFeedContent());
         newFeed.setFeedCategory(newFeed.getFeedCategory());
@@ -73,7 +71,7 @@ public class FeedService {
         Feed foundFeed = feedRepository.findById(feedNo).get();
         feedRepository.delete(foundFeed);
 
-        FeedDeleteDTO feedDeleteDTO = new FeedDeleteDTO();
+        FeedListDTO feedListDTO = new FeedListDTO();
     }
 
 //    public List<FeedListDTO> findFeedListBySearch(FeedSearchFilter feedSearchFilter) {

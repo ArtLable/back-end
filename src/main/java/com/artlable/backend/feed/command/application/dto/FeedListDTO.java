@@ -16,7 +16,7 @@ import java.util.List;
 public class FeedListDTO {
 
     private Long feedNo;
-    private Long memberNo;
+    private Member memberNo;
     private String feedContent;
     private String feedCategory;
     private List<Comment> commentList;
@@ -24,7 +24,8 @@ public class FeedListDTO {
     private List<Like> likeNo;
     private LocalDateTime createdDate;
 
-    public FeedListDTO(Long feedNo, Long memberNo, String feedContent, String feedCategory, List<Comment> commentList, List<File> fileNo, List<Like> likeNo, LocalDateTime createdDate) {
+    public FeedListDTO(Long feedNo, Member memberNo, String feedContent, String feedCategory, List<Comment> commentList,
+                       List<File> fileNo, List<Like> likeNo, LocalDateTime createdDate) {
         this.feedNo = feedNo;
         this.memberNo = memberNo;
         this.feedContent = feedContent;
@@ -39,7 +40,7 @@ public class FeedListDTO {
         this.feedNo = feedNo;
     }
 
-    public void setMemberNo(Long memberNo) {
+    public void setMemberNo(Member memberNo) {
         this.memberNo = memberNo;
     }
 

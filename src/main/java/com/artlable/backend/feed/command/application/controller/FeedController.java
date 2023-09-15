@@ -1,6 +1,7 @@
 package com.artlable.backend.feed.command.application.controller;
 
 import com.artlable.backend.common.ResponseMessage;
+import com.artlable.backend.common.page.Pagenation;
 import com.artlable.backend.feed.command.application.dto.FeedRegistDTO;
 import com.artlable.backend.feed.command.application.dto.FeedListDTO;
 
@@ -9,8 +10,6 @@ import com.artlable.backend.feed.command.application.service.FeedService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,15 +34,16 @@ public class FeedController {
     }
     @ApiOperation(value = "모든 피드 조회")
     @GetMapping("/feeds")
-    public ResponseEntity<ResponseMessage> findAllFeeds(@PageableDefault(size = 1) Pageable pageable) {
+    public ResponseEntity<ResponseMessage> findAllFeeds(Pagenation pagenation) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        List<FeedListDTO> feeds = feedService.findAllFeeds((java.awt.print.Pageable) pageable);
+        List<FeedListDTO> feeds = feedService.findAllFeeds(pagenation);
         responseMap.put("feeds", feeds);
+
 
         return new ResponseEntity<>(
                 new ResponseMessage(200, "조회성공", responseMap),
@@ -73,10 +73,10 @@ public class FeedController {
 
     @ApiOperation(value = "피드 추가/작성")
     @PostMapping("/feeds")
-    public ResponseEntity<?> registFeed(FeedRegistDTO newFeed, @RequestHeader(value = "Auth") String auth)
+    public ResponseEntity<?> registFeed(FeedRegistDTO newFeed)
         throws JsonProcessingException {
 
-        Long feedNo = feedService.registNewFeed(newFeed, auth);
+        Long feedNo = feedService.registNewFeed(newFeed);
 
         return ResponseEntity
                 .created(URI.create("/api/v1/feeds/regist/" + newFeed.getFeedNo()))

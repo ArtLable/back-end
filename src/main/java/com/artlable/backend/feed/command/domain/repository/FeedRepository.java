@@ -10,7 +10,4 @@ import java.util.Map;
 
 @Repository
 public interface FeedRepository extends JpaRepository<Feed, Long> {
-//    List<Feed> findFeedListBySearch(FeedSearchFilter feedSearchFilter);
-//    Map<String, String> readValue(String auth, Class<Map> mapClass);
-//    Object map(Feed feed, Class<Feed> feedListDTOClass);
 }
