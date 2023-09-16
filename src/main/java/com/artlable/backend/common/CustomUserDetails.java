@@ -1,4 +1,4 @@
-package com.artlable.backend.member.command.application.dto;
+package com.artlable.backend.common;
 
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import org.springframework.security.core.GrantedAuthority;

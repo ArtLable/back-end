@@ -1,6 +1,6 @@
-package com.artlable.backend.member.command.application.service;
+package com.artlable.backend.common;
 
-import com.artlable.backend.member.command.application.dto.CustomUserDetails;
+import com.artlable.backend.common.CustomUserDetails;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;

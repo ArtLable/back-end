@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 
 @Component //라이브러리를 활용한 jwt 생성 검증 컴포넌트
+
 public class TokenProvider implements InitializingBean {
 
     private final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
@@ -30,6 +31,7 @@ public class TokenProvider implements InitializingBean {
     private final String secret;
     private final long tokenValidityInMilliseconds;
     private Key key;
+
 
     //yml 에서 secret 참조
     public TokenProvider(@Value("${jwt.secret}") String secret,
@@ -45,7 +47,7 @@ public class TokenProvider implements InitializingBean {
     }
 
     //토큰생성
-    public String createToken(Authentication authentication) {
+    public String createAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -59,6 +61,17 @@ public class TokenProvider implements InitializingBean {
                 .claim(AUTHORITIES_KEY, authorities) // 정보 저장
                 .signWith(key, SignatureAlgorithm.HS512) // 사용할 암호화 알고리즘과 , signature 에 들어갈 secret값 세팅
                 .setExpiration(validity) // set Expire Time 해당 옵션 안넣으면 expire안함
+                .compact();
+    }
+
+    public String createRefreshToken(){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + this.tokenValidityInMilliseconds);
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(key)
                 .compact();
     }
 
