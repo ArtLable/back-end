@@ -1,6 +1,7 @@
 package com.artlable.backend.member.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
+import com.artlable.backend.login.command.domain.agreegate.entity.Authority;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -36,18 +37,18 @@ public class Member extends AuditingFields {
     private MemberRole memberRole;
 
     //소셜 로그인 테이블 조인
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Authority> auth;
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Authority> authority;
 
     @Builder
-    public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage, MemberRole memberRole, List<Authority> auth){
+    public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage, MemberRole memberRole, List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;
         this.isDeleted = isDeleted;
         this.memberImage = memberImage;
         this.memberRole = memberRole;
-        this.auth = auth;
+        this.authority = authority;
     }
 
 }

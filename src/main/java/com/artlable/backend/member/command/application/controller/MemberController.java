@@ -1,9 +1,7 @@
 package com.artlable.backend.member.command.application.controller;
 
 import com.artlable.backend.member.command.application.dto.sign.SignRequestDTO;
-import com.artlable.backend.member.command.application.dto.sign.SignResponseDTO;
 import com.artlable.backend.member.command.application.service.SignService;
-import com.artlable.backend.member.command.domain.repository.MemberRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final SignService signService;
-
-//    @ApiOperation(value = "로그인 요청")
-//    @PostMapping(value = "/login")
-//    public ResponseEntity<SignResponseDTO> signin(@RequestBody SignRequestDTO requestDTO) throws Exception{
-//        return new ResponseEntity<>(signService.login(requestDTO), HttpStatus.OK);
-//    }
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping(value = "/signup")
