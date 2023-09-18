@@ -1,6 +1,6 @@
 package com.artlable.backend.member.command.application.dto.sign;
 
-import com.artlable.backend.login.command.domain.agreegate.entity.Authority;
+import com.artlable.backend.member.command.domain.aggregate.entity.Authority;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
 import lombok.AccessLevel;
@@ -16,18 +16,14 @@ public class SignResponseDTO {
 
     private Long memberNo;
     private String memberEmail;
-    private String isDeleted;
+    private String memberNickname;
     private String memberImage;
-    private MemberRole memberRole;
-    private List<Authority> auth;
 
     @Builder
     public SignResponseDTO(Member member){
         this.memberNo = member.getMemberNo();
         this.memberEmail = member.getMemberEmail();
-        this.isDeleted = member.getIsDeleted();
+        this.memberNickname = member.getMemberNickname();
         this.memberImage = member.getMemberImage();
-        this.memberRole = member.getMemberRole();
-        this.auth = member.getAuthority();
     }
 }

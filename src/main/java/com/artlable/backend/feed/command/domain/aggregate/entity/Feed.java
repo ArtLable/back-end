@@ -32,9 +32,9 @@ public class Feed extends AuditingFields {
     @Column(name = "feed_is_deleted")
     private boolean feedIsDeleted;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    private Member memberNo;
+    private Member member;
 
 //    @OneToMany
 //    @JoinColumn(name = "file_no")
@@ -56,13 +56,13 @@ public class Feed extends AuditingFields {
 
     }
 
-    public Feed(Long feedNo, String feedContent, String feedCategory, boolean feedIsDeleted, Member memberNo, List<File> fileNo,
+    public Feed(Long feedNo, String feedContent, String feedCategory, boolean feedIsDeleted, Member member, List<File> fileNo,
                 List<Comment> commentList, boolean commentIsDeleted, int likeCount) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
         this.feedIsDeleted = feedIsDeleted;
-        this.memberNo = memberNo;
+        this.member = member;
 //        this.fileNo = fileNo;
 //        this.commentList = commentList;
         this.commentIsDeleted = commentIsDeleted;
@@ -100,8 +100,8 @@ public class Feed extends AuditingFields {
         this.feedIsDeleted = feedIsDeleted;
     }
 
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
 //    public void setFileNo(List<File> fileNo) {
