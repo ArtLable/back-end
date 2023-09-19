@@ -35,11 +35,9 @@ public class LoginService {
     public Map<String, Object> login(LoginRequestDTO requestDTO) throws Exception {
         Member member = loginRepository.findByMemberEmail(requestDTO.getMemberEmail()).orElseThrow(
                 () -> new BadCredentialsException("잘못된 계정정보입니다.")); // id조회실패시 exception
-
         if (!passwordEncoder.matches(requestDTO.getMemberPwd(), member.getMemberPwd())) {
             throw new BadCredentialsException("잘못된 계정정보입니다."); // 비밀번호 미일치시 exception
         }
-
         // 멤버 정보를 기반으로 JWT 액세스 토큰 생성
         String accessToken = tokenProvider.createAccessToken(
                 new UsernamePasswordAuthenticationToken(

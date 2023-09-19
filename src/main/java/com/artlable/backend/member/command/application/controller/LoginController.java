@@ -26,7 +26,9 @@ public class LoginController {
 
     @ApiOperation(value = "로그인 요청")
     @PostMapping(value = "/authentication/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) throws Exception{
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) throws Exception{
+
+        try{
 
         Map<String, Object> loginResult = loginService.login(requestDTO);
         LoginResponseDTO loginResponse = (LoginResponseDTO) loginResult.get("loginResponse");
@@ -40,19 +42,26 @@ public class LoginController {
         response.addCookie(refreshTokenCookie);
 
         return ResponseEntity.ok(loginResponse);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @ApiOperation(value = "로그아웃 요청") // 쿠키에 refresh토큰 삭제
     @PostMapping("/authentication/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        // 리프레시 토큰 쿠키 삭제
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(0); // 쿠키 만료
-        response.addCookie(refreshTokenCookie);
+        try {
+            // 리프레시 토큰 쿠키 삭제
+            Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(0); // 쿠키 만료
+            response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
