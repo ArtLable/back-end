@@ -51,6 +51,11 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
                 .antMatchers("/api/v1/authentication/**").permitAll() //로그인
                 .antMatchers("/api/v1/members/**").permitAll() //회원가입
+                .antMatchers("/api/v1/feeds/**").permitAll() //피드 조회
+                .antMatchers("/api/v1/feeds/{feedNo}**").permitAll() //피드 번호로 조회
+                .antMatchers("/api/v1/feeds/regist**").permitAll() //피드 추가
+                .antMatchers("/api/v1/files/**").permitAll() //파일 업로드
+                .antMatchers("/api/v1/files/{fileNo}**").permitAll() //파일 다운로드
                 .antMatchers( //swagger
                         "/swagger-ui/**",
                         "/v2/api-docs",

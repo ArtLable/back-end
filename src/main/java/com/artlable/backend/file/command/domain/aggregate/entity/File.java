@@ -9,7 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "file")
+@Table(name = "file_tbl")
 @Getter
 @ToString
 public class File extends AuditingFields {
@@ -22,6 +22,12 @@ public class File extends AuditingFields {
     @Column(name = "file_name")
     private String fileName;
 
+    @Column(name = "file_type")
+    private String fileType;
+
+    @Column(name = "file_size")
+    private Long fileSize;
+
     @Column(name = "file_path")
     private String filePath;
 
@@ -29,20 +35,22 @@ public class File extends AuditingFields {
     @JoinColumn(name = "member_no")
     private Member memberNo;
 
-    @ManyToOne
-    @JoinColumn(name = "feed_No")
-    private Feed feedNo;
+//    @ManyToOne
+//    @JoinColumn(name = "feed_No")
+//    private Feed feedNo;
 
-    public File() {
+    public File(String filePath) {
 
     }
 
-    public File(Long fileNo, String fileName, String filePath, Member memberNo, Feed feedNo) {
+    public File(Long fileNo, String fileName, String fileType, Long fileSize, String filePath, Member memberNo, Feed feedNo) {
         this.fileNo = fileNo;
         this.fileName = fileName;
+        this.fileType = fileType;
+        this.fileSize = fileSize;
         this.filePath = filePath;
         this.memberNo = memberNo;
-        this.feedNo = feedNo;
+//        this.feedNo = feedNo;
     }
 
     public void setFileNo(Long fileNo) {
@@ -53,6 +61,14 @@ public class File extends AuditingFields {
         this.fileName = fileName;
     }
 
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
+    }
+
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
@@ -60,8 +76,8 @@ public class File extends AuditingFields {
     public void setMemberNo(Member memberNo) {
         this.memberNo = memberNo;
     }
-
-    public void setFeedNo(Feed feedNo) {
-        this.feedNo = feedNo;
-    }
+//
+//    public void setFeedNo(Feed feedNo) {
+//        this.feedNo = feedNo;
+//    }
 }
