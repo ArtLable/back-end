@@ -1,4 +1,4 @@
-package com.artlable.backend.login.command.domain.agreegate.entity;
+package com.artlable.backend.member.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
@@ -65,5 +65,13 @@ public class Authority extends AuditingFields {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    //업데이트 토큰
+    public void updateToken(String tokenType, String accessToken, String refreshToken, MemberSocialLogin memberSocialLogin) {
+        this.tokenType = tokenType;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.memberSocialLogin = memberSocialLogin;
     }
 }

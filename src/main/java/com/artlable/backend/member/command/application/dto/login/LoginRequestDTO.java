@@ -1,4 +1,4 @@
-package com.artlable.backend.login.command.application.dto.login;
+package com.artlable.backend.member.command.application.dto.login;
 
 import lombok.Getter;
 
