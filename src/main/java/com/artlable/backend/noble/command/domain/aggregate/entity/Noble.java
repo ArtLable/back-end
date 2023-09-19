@@ -2,6 +2,7 @@ package com.artlable.backend.noble.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -31,28 +32,33 @@ public class Noble extends AuditingFields {
     @Column(name = "character_name")
     private String character_name;
 
-    @OneToMany
-    @JoinColumn(name = "file_no")
-    private List<File> fileNo;
+    @ManyToOne
+    @JoinColumn(name = "member_no")
+    private Member memberNo;
 
-    @OneToMany
-    @JoinColumn(name = "file_name")
-    private List<File>  fileName;
-
-    @OneToMany
-    @JoinColumn(name = "file_path")
-    private List<File> filePath;
+//    @OneToMany
+//    @JoinColumn(name = "file_no")
+//    private List<File> fileNo;
+//
+//    @OneToMany
+//    @JoinColumn(name = "file_name")
+//    private List<File>  fileName;
+//
+//    @OneToMany
+//    @JoinColumn(name = "file_path")
+//    private List<File> filePath;
 
     public Noble(Long nobleNo, String nobleContent, String noble_title, String noble_type,
-                 String character_name, List<File> fileNo, List<File> fileName, List<File> filePath) {
+                 String character_name, List<File> fileNo, List<File> fileName, List<File> filePath, Member memberNo) {
         this.nobleNo = nobleNo;
         this.nobleContent = nobleContent;
         this.noble_title = noble_title;
         this.noble_type = noble_type;
         this.character_name = character_name;
-        this.fileNo = fileNo;
-        this.fileName = fileName;
-        this.filePath = filePath;
+//        this.fileNo = fileNo;
+//        this.fileName = fileName;
+//        this.filePath = filePath;
+        this.memberNo = memberNo;
     }
 
     public Noble() {
@@ -79,15 +85,19 @@ public class Noble extends AuditingFields {
         this.character_name = character_name;
     }
 
-    public void setFileNo(List<File> fileNo) {
-        this.fileNo = fileNo;
-    }
+//    public void setFileNo(List<File> fileNo) {
+//        this.fileNo = fileNo;
+//    }
+//
+//    public void setFileName(List<File> fileName) {
+//        this.fileName = fileName;
+//    }
+//
+//    public void setFilePath(List<File> filePath) {
+//        this.filePath = filePath;
+//    }
 
-    public void setFileName(List<File> fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setFilePath(List<File> filePath) {
-        this.filePath = filePath;
+    public void setMemberNo(Member memberNo) {
+        this.memberNo = memberNo;
     }
 }

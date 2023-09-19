@@ -2,6 +2,7 @@ package com.artlable.backend.webtoon.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -31,28 +32,33 @@ public class WebToon extends AuditingFields {
     @Column(name = "character_name")
     private String characterName;
 
-    @OneToMany
-    @JoinColumn(name = "file_no")
-    private List<File> fileNo;
+//    @OneToMany
+//    @JoinColumn(name = "file_no")
+//    private List<File> fileNo;
+//
+//    @OneToMany
+//    @JoinColumn(name = "file_name")
+//    private List<File>  fileName;
+//
+//    @OneToMany
+//    @JoinColumn(name = "file_path")
+//    private List<File> filePath;
 
-    @OneToMany
-    @JoinColumn(name = "file_name")
-    private List<File>  fileName;
-
-    @OneToMany
-    @JoinColumn(name = "file_path")
-    private List<File> filePath;
+    @ManyToOne
+    @JoinColumn(name = "member_no")
+    private Member memberNo;
 
     public WebToon(Long webToonNo, String webToonContent, String webToonTitle, String webToonType, String characterName,
-                   List<File> fileNo, List<File> fileName, List<File> filePath) {
+                   List<File> fileNo, List<File> fileName, List<File> filePath, Member memberNo) {
         this.webToonNo = webToonNo;
         this.webToonContent = webToonContent;
         this.webToonTitle = webToonTitle;
         this.webToonType = webToonType;
         this.characterName = characterName;
-        this.fileNo = fileNo;
-        this.fileName = fileName;
-        this.filePath = filePath;
+//        this.fileNo = fileNo;
+//        this.fileName = fileName;
+//        this.filePath = filePath;
+        this.memberNo = memberNo;
     }
 
     public WebToon() {
@@ -79,15 +85,19 @@ public class WebToon extends AuditingFields {
         this.characterName = characterName;
     }
 
-    public void setFileNo(List<File> fileNo) {
-        this.fileNo = fileNo;
-    }
+//    public void setFileNo(List<File> fileNo) {
+//        this.fileNo = fileNo;
+//    }
+//
+//    public void setFileName(List<File> fileName) {
+//        this.fileName = fileName;
+//    }
+//
+//    public void setFilePath(List<File> filePath) {
+//        this.filePath = filePath;
+//    }
 
-    public void setFileName(List<File> fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setFilePath(List<File> filePath) {
-        this.filePath = filePath;
+    public void setMemberNo(Member memberNo) {
+        this.memberNo = memberNo;
     }
 }
