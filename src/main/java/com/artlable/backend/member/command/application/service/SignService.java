@@ -26,6 +26,7 @@ public class SignService {
             Member member = Member.builder()
                     .memberEmail(requestDTO.getMemberEmail())
                     .memberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()))
+                    .memberNickname(requestDTO.getMemberNickname())
                     .isDeleted("N")
                     .memberRole(MemberRole.MEMBER)
                     .build();
@@ -41,6 +42,7 @@ public class SignService {
     //닉네임 중복조회
     @Transactional(readOnly = true)
     public boolean checkDuplicateMemberNickname(String memberNickname) throws Exception {
+
         if(memberRepository.existsByMemberNickname(memberNickname)){
             throw new Exception("사용중인 닉네임 입니다.");
             }
@@ -50,6 +52,11 @@ public class SignService {
     //아이디 중복조회
     @Transactional(readOnly = true)
     public boolean checkDuplicateMemberEmail(String memberEmail) throws Exception {
+
+        if (memberEmail == null || memberEmail.trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일 값이 유효하지 않습니다.");
+        }
+
         if(memberRepository.existsByMemberEmail(memberEmail)){
             throw new Exception("사용중인 이메일 입니다.");
         }

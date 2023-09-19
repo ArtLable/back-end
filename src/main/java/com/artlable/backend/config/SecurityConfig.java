@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
-                .antMatchers("/api/v1/login/**").permitAll() //로그인
-                .antMatchers("/api/v1/signup/**").permitAll() //회원가입
+                .antMatchers("/api/v1/authentication/**").permitAll() //로그인
+                .antMatchers("/api/v1/members/**").permitAll() //회원가입
                 .antMatchers("/api/v1/feeds/**").permitAll() //피드 조회
                 .antMatchers("/api/v1/feeds/{feedNo}**").permitAll() //피드 번호로 조회
                 .antMatchers("/api/v1/feeds/regist**").permitAll() //피드 추가
