@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "feed")
 @Getter
-@ToString
 public class Feed extends AuditingFields {
 
     @Id
@@ -41,10 +39,10 @@ public class Feed extends AuditingFields {
 //    @OrderBy("fileNo asc")
 //    private List<File> fileNo;
 
-//    @OneToMany
-//    @JoinColumn(name = "comment_no")
-//    @OrderBy("commentNo asc")
-//    private List<Comment> commentList;
+    @OneToMany
+    @JoinColumn(name = "comment_no")
+    @OrderBy("commentNo asc")
+    private List<Comment> commentList;
 
     @Column(name = "comment_is_deleted")
     private boolean commentIsDeleted;
@@ -64,7 +62,7 @@ public class Feed extends AuditingFields {
         this.feedIsDeleted = feedIsDeleted;
         this.member = member;
 //        this.fileNo = fileNo;
-//        this.commentList = commentList;
+        this.commentList = commentList;
         this.commentIsDeleted = commentIsDeleted;
         this.likeCount = likeCount;
     }
