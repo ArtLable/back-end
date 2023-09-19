@@ -26,6 +26,7 @@ public class SignService {
             Member member = Member.builder()
                     .memberEmail(requestDTO.getMemberEmail())
                     .memberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()))
+                    .memberNickname(requestDTO.getMemberNickname())
                     .isDeleted("N")
                     .memberRole(MemberRole.MEMBER)
                     .build();

@@ -65,6 +65,7 @@ public class LoginService {
 
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("loginResponse", LoginResponseDTO.builder()
+                .memberNo(member.getMemberNo())
                 .memberNickname(member.getMemberNickname())
                 .memberImage(member.getMemberImage())
                 .memberRole(member.getMemberRole())
