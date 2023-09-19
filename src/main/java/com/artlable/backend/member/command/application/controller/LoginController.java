@@ -25,7 +25,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @ApiOperation(value = "로그인 요청")
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/authentication/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) throws Exception{
 
         Map<String, Object> loginResult = loginService.login(requestDTO);
@@ -43,7 +43,7 @@ public class LoginController {
     }
 
     @ApiOperation(value = "로그아웃 요청") // 쿠키에 refresh토큰 삭제
-    @PostMapping("/logout")
+    @PostMapping("/authentication/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         // 리프레시 토큰 쿠키 삭제
         Cookie refreshTokenCookie = new Cookie("refreshToken", null);

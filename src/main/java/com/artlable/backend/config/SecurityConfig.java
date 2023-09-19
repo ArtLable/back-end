@@ -49,8 +49,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
-                .antMatchers("/api/v1/login/**").permitAll() //로그인
-                .antMatchers("/api/v1/signup/**").permitAll() //회원가입
+                .antMatchers("/api/v1/authentication/**").permitAll() //로그인
+                .antMatchers("/api/v1/members/**").permitAll() //회원가입
                 .antMatchers( //swagger
                         "/swagger-ui/**",
                         "/v2/api-docs",
