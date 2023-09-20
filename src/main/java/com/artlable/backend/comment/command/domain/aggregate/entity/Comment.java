@@ -15,7 +15,7 @@ public class Comment extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name= "comment_no")
     private Long commentNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

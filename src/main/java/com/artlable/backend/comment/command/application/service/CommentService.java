@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private ModelMapper modelMapper;
 
     //전체조회
 

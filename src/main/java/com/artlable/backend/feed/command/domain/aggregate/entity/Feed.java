@@ -2,18 +2,21 @@ package com.artlable.backend.feed.command.domain.aggregate.entity;
 
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.feed.command.application.dto.FeedListDTO;
 import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.like.command.domain.aggregate.entity.Like;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
+import com.artlable.backend.report.command.domain.aggregate.entity.Report;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feed extends AuditingFields {
 
     @Id
@@ -21,100 +24,59 @@ public class Feed extends AuditingFields {
     @Column(name = "feed_no")
     private Long feedNo;
 
-    @Column(name = "feed_content")
+    @Column
     private String feedContent;
 
-    @Column(name = "feed_category")
+    @Column
     private String feedCategory;
-
-    @Column(name = "feed_is_deleted")
-    private boolean feedIsDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
     private Member member;
 
-//    @OneToMany
-//    @JoinColumn(name = "file_no")
-//    @OrderBy("fileNo asc")
-//    private List<File> fileNo;
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OrderBy("fileNo asc")
+    private List<File> file;
 
-    @OneToMany
-    @JoinColumn(name = "comment_no")
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
     @OrderBy("commentNo asc")
     private List<Comment> commentList;
 
-    @Column(name = "comment_is_deleted")
-    private boolean commentIsDeleted;
+    @Column
+    private boolean feedIsDeleted;
 
-    @Column(name = "like_count")
-    private int likeCount;
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "like_no")
+    private List<Like> likeList;
 
-    public Feed() {
+    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "report_no")
+    private List<Report> reportList;
 
-    }
-
-    public Feed(Long feedNo, String feedContent, String feedCategory, boolean feedIsDeleted, Member member, List<File> fileNo,
-                List<Comment> commentList, boolean commentIsDeleted, int likeCount) {
+    @Builder
+    public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<File> file,
+                List<Comment> commentList, boolean feedIsDeleted, List<Like> likeList, List<Report> reportList) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.feedIsDeleted = feedIsDeleted;
         this.member = member;
-//        this.fileNo = fileNo;
+        this.file = file;
         this.commentList = commentList;
-        this.commentIsDeleted = commentIsDeleted;
-        this.likeCount = likeCount;
+        this.feedIsDeleted = feedIsDeleted;
+        this.likeList = likeList;
+        this.reportList = reportList;
     }
 
-    public void create(Long newFeedNo, String newFeedContent, String newFeedCategory) {
-        this.feedNo = newFeedNo;
-        this.feedContent = newFeedContent;
-        this.feedCategory = newFeedCategory;
-
-    }
-    public void update(String feedContent, String feedCategory) {
-        this.feedContent = feedContent;
-        this.feedCategory = feedCategory;
-    }
-
-    public void delete() {
-        this.feedIsDeleted = true;
-    }
-
-    public void setFeedNo(Long feedNo) {
-        this.feedNo = feedNo;
-    }
-
+    //피드 내용 수정 (더티체킹)
     public void setFeedContent(String feedContent) {
         this.feedContent = feedContent;
     }
 
-    public void setFeedCategory(String feedCategory) {
-        this.feedCategory = feedCategory;
-    }
+    //피드 삭제 (softDelete)
+    public void setFeedIsDeleted(boolean feedIsDeleted){ this.feedIsDeleted = feedIsDeleted; }
 
-    public void setFeedIsDeleted(boolean feedIsDeleted) {
-        this.feedIsDeleted = feedIsDeleted;
-    }
-
+    //글작성
     public void setMember(Member member) {
         this.member = member;
-    }
-
-//    public void setFileNo(List<File> fileNo) {
-//        this.fileNo = fileNo;
-//    }
-
-//    public void setCommentList(List<Comment> commentList) {
-//        this.commentList = commentList;
-//    }
-
-    public void setCommentIsDeleted(boolean commentIsDeleted) {
-        this.commentIsDeleted = commentIsDeleted;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
     }
 }

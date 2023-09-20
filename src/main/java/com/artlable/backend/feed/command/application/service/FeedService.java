@@ -1,84 +1,123 @@
 package com.artlable.backend.feed.command.application.service;
 
-import com.artlable.backend.common.page.Pagenation;
-import com.artlable.backend.feed.command.application.dto.*;
+import com.artlable.backend.feed.command.application.dto.create.FeedCreateRequestDTO;
+import com.artlable.backend.feed.command.application.dto.read.FeedReadResponseDTO;
+import com.artlable.backend.feed.command.application.dto.update.FeedUpdateRequestDTO;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.feed.command.domain.repository.FeedRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import com.artlable.backend.jwt.TokenProvider;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
+import com.artlable.backend.member.command.domain.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.modelmapper.ModelMapper;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class FeedService {
 
     private final FeedRepository feedRepository;
-    private final ModelMapper modelMapper;
+    private final MemberRepository memberRepository;
+    private final TokenProvider tokenProvider;
 
-    @Autowired
-    public FeedService(FeedRepository feedRepository, ModelMapper modelMapper) {
-        this.feedRepository = feedRepository;
-        this.modelMapper = modelMapper;
+    //전체 피드 조회
+    @Transactional(readOnly = true)
+    public List<FeedReadResponseDTO> findAllFeeds() {
+
+        //조회
+        List<Feed> feeds = feedRepository.findByFeedIsDeletedFalseOrderByFeedNoDesc();
+        //DTO 리스트 생성
+        List<FeedReadResponseDTO> feedlist = new ArrayList<>();
+        // 조회결과 삽입
+        for (Feed feed : feeds) {
+            FeedReadResponseDTO feedReadResponseDTO = new FeedReadResponseDTO(feed);
+            feedlist.add(feedReadResponseDTO);
+        }
+
+        return feedlist;
     }
 
-    /* 전체 조회 */
-    public List<FeedListDTO> findAllFeeds(Pagenation pagenation) {
+    // 특정피드 조회
+    @Transactional(readOnly = true)
+    public FeedReadResponseDTO findFeed(Long feedNo) {
 
-        List<Feed> feeds = feedRepository.findAll(Sort.by(Sort.Direction.DESC, "feedNo"));
+        //조회
+        Feed feed = feedRepository.findByFeedNo(feedNo);
+        //DTO생성
+        FeedReadResponseDTO responseDTO = new FeedReadResponseDTO(feed);
 
-        return feeds.stream().map(feed -> modelMapper.map(feed, FeedListDTO.class))
-                .collect(Collectors.toList());
+
+        return responseDTO;
     }
 
-    /* 일부 조회 */
-    public FeedListDTO findFeedById(Long feedNo) {
-
-        Feed foundFeed = feedRepository.findById(feedNo).get();
-
-        return modelMapper.map(foundFeed, FeedListDTO.class);
-    }
-
+    //글 작성
     @Transactional
-    public Long registNewFeed(FeedRegistDTO newFeed) throws JsonProcessingException { // 자바 객체를 json 문자열로 변환
+    public Long createFeed(FeedCreateRequestDTO requestDTO, String accessToken) {
+        // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-//        if (auth.equals("")) {
-//            throw new IllegalArgumentException("비회원 접근");
-//        }
+        // FeedCreateRequestDTO를 사용하여 Feed 엔터티를 생성합니다.
+        Feed feed = requestDTO.toEntity();
+        feed.setMember(member); // 인증된 사용자의 정보를 Feed 엔터티의 member 필드에 설정합니다.
 
-        newFeed.setFeedContent(newFeed.getFeedContent());
-        newFeed.setFeedCategory(newFeed.getFeedCategory());
+        // Feed 엔터티를 저장합니다.
+        feedRepository.save(feed);
 
-        return feedRepository.save(modelMapper.map(newFeed, Feed.class)).getFeedNo();
+        // 생성된 Feed의 ID를 반환합니다.
+        return feed.getFeedNo();
     }
 
+    //피드 수정
     @Transactional
-    public void modifyFeed(FeedUpdateDTO modifyFeed, Long feedNo) {
+    public Long updateFeed(Long feedNo, FeedUpdateRequestDTO requestDTO, String accessToken) {
+        // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member authenticatedMember = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        Feed foundFeed = feedRepository.findById(feedNo).get();
+        // 요청된 피드 번호로 피드를 조회합니다.
+        Feed feed = feedRepository.findByFeedNo(feedNo);
 
-        foundFeed.setFeedContent(modifyFeed.getFeedContent());
-        foundFeed.setFeedCategory(modifyFeed.getFeedCategory());
+        // 인증된 사용자가 피드의 소유자인지 확인합니다.
+        if (!feed.getMember().getMemberEmail().equals(authenticatedMember.getMemberEmail())) {
+            throw new IllegalArgumentException("해당 피드를 수정할 권한이 없습니다.");
+        }
+
+        // 피드 내용을 업데이트합니다.
+        feed.setFeedContent(requestDTO.getFeedContent());
+
+        return feed.getFeedNo();
     }
 
+    //피드 삭제
     @Transactional
-    public void removeFeed(Long feedNo) {
+    public Long deleteFeed(Long feedNo, String accessToken ) {
 
-        Feed foundFeed = feedRepository.findById(feedNo).get();
-        feedRepository.delete(foundFeed);
+        // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member authenticatedMember = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        FeedListDTO feedListDTO = new FeedListDTO();
+        // 요청된 피드 번호로 피드를 조회합니다.
+        Feed feed = feedRepository.findByFeedNo(feedNo);
+
+        // 인증된 사용자가 피드의 소유자인지 확인합니다.
+        if (!feed.getMember().getMemberEmail().equals(authenticatedMember.getMemberEmail())) {
+            throw new IllegalArgumentException("해당 피드를 수정할 권한이 없습니다.");
+        }
+
+        feed.setFeedIsDeleted(true);
+
+        return feed.getFeedNo();
     }
 
-//    public List<FeedListDTO> findFeedListBySearch(FeedSearchFilter feedSearchFilter) {
-//
-////        List<Feed> feeds = feedRepository.findFeedListBySearch(feedSearchFilter);
-//
-////        return feeds.stream().map(feed -> modelMapper.map(feed, FeedListDTO.class))
-////                .collect(Collectors.toList());
-////    }
 }
