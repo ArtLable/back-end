@@ -1,5 +1,6 @@
 package com.artlable.backend.member.command.domain.aggregate.entity;
 
+import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
@@ -18,6 +19,7 @@ public class Member extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_no")
     private Long memberNo; //회원관리번호
 
     @Column(length = 100, nullable = false, unique = true)
@@ -42,8 +44,8 @@ public class Member extends AuditingFields {
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Feed> feedLists;
 
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-//    private List<Comment> commentLists;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Comment> commentLists;
 //
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 //    private List<Like> likeList;
@@ -57,7 +59,8 @@ public class Member extends AuditingFields {
 
     @Builder
     public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage,
-                  String memberNickname, MemberRole memberRole, List<Feed> feedLists, List<Authority> authority){
+                  String memberNickname, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
+                  List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;
@@ -66,6 +69,7 @@ public class Member extends AuditingFields {
         this.memberNickname = memberNickname;
         this.memberRole = memberRole;
         this.feedLists = feedLists;
+        this.commentLists = commentList;
         this.authority = authority;
     }
 

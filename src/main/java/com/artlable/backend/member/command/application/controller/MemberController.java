@@ -1,5 +1,6 @@
 package com.artlable.backend.member.command.application.controller;
 
+import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.member.command.application.dto.sign.SignRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdateInfoRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdatePwdRequestDTO;
@@ -8,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,8 @@ public class MemberController {
             signService.register(requestDTO);
             return  ResponseEntity.ok("회원가입 완료");
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
@@ -39,7 +42,8 @@ public class MemberController {
             signService.checkDuplicateMemberNickname(memberNickname);
             return ResponseEntity.ok("사용 가능한 닉네임 입니다.");
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
@@ -50,7 +54,8 @@ public class MemberController {
             signService.checkDuplicateMemberEmail(memberEmail);
             return ResponseEntity.ok("사용 가능한 이메일 입니다..");
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
@@ -61,7 +66,8 @@ public class MemberController {
             signService.changeMemberPwd(requestDTO, memberNo);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
@@ -72,7 +78,8 @@ public class MemberController {
             signService.updateMemberInfo(requestDTO, memberNo);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
@@ -83,7 +90,8 @@ public class MemberController {
             signService.deleteMember(memberNo);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 }
