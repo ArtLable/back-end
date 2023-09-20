@@ -1,86 +1,58 @@
 package com.artlable.backend.report.command.domain.aggregate.entity;
 
+import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.report.command.domain.aggregate.enumtype.ReportStateEnum;
 import com.artlable.backend.report.command.domain.aggregate.enumtype.ReportTypeEnum;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "report")
 @Getter
-@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Report extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-    private Member memberNo;
+    private Member reporter; //신고자
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member reportee; //피신고자
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_no")
-    private Feed feedNo;
+    private Feed feed; // 신고당한 컨텐츠
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_no")
+    private Comment comment; // 신고당한 댓글
 
     @Column
-    private String reporter;
-
-    @Column
-    private String reportee;
-
-    @Column(name = "report_state")
     @Enumerated(EnumType.STRING)
     private ReportStateEnum reportState;
 
-    @Column(name = "report_type")
+    @Column
     @Enumerated(EnumType.STRING)
     private ReportTypeEnum reportType;
 
-    public Report() {
-
-    }
-
-    public Report(Long reportNo, Member memberNo, Feed feedNo, String reporter, String reportee, ReportStateEnum reportState, ReportTypeEnum reportType) {
+    public Report(Long reportNo, Member reporter, Member reportee, Feed feed, Comment comment, ReportStateEnum reportState, ReportTypeEnum reportType) {
         this.reportNo = reportNo;
-        this.memberNo = memberNo;
-        this.feedNo = feedNo;
         this.reporter = reporter;
         this.reportee = reportee;
+        this.feed = feed;
+        this.comment = comment;
         this.reportState = reportState;
-        this.reportType = reportType;
-    }
-
-    public void setReportNo(Long reportNo) {
-        this.reportNo = reportNo;
-    }
-
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
-    }
-
-    public void setFeedNo(Feed feedNo) {
-        this.feedNo = feedNo;
-    }
-
-    public void setReporter(String reporter) {
-        this.reporter = reporter;
-    }
-
-    public void setReportee(String reportee) {
-        this.reportee = reportee;
-    }
-
-    public void setReportState(ReportStateEnum reportState) {
-        this.reportState = reportState;
-    }
-
-    public void setReportType(ReportTypeEnum reportType) {
         this.reportType = reportType;
     }
 }

@@ -17,6 +17,7 @@ public class LoginResponseDTO {
     private List<AuthResponseDTO> authority;
 
 
+    //로그인 응답
     @Builder
     public LoginResponseDTO(Long memberNo, String memberNickname, String memberImage, MemberRole memberRole, List<AuthResponseDTO> authority) {
         this.memberNo = memberNo;

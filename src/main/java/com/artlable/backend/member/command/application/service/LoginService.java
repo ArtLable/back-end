@@ -34,12 +34,10 @@ public class LoginService {
     @Transactional
     public Map<String, Object> login(LoginRequestDTO requestDTO) throws Exception {
         Member member = loginRepository.findByMemberEmail(requestDTO.getMemberEmail()).orElseThrow(
-                () -> new BadCredentialsException("잘못된 계정정보입니다.")); // id조회실패시 exception
-
+                () -> new BadCredentialsException("잘못된 아이디 혹은 비밀번호 입니다.")); // id조회실패시 exception
         if (!passwordEncoder.matches(requestDTO.getMemberPwd(), member.getMemberPwd())) {
-            throw new BadCredentialsException("잘못된 계정정보입니다."); // 비밀번호 미일치시 exception
+            throw new BadCredentialsException("잘못된 아이디 혹은 비밀번호 입니다."); // 비밀번호 미일치시 exception
         }
-
         // 멤버 정보를 기반으로 JWT 액세스 토큰 생성
         String accessToken = tokenProvider.createAccessToken(
                 new UsernamePasswordAuthenticationToken(
@@ -50,6 +48,7 @@ public class LoginService {
         );
 
         String refreshToken = tokenProvider.createRefreshToken();
+
 
         // 처음로그인
         Authority authority = authorityRepository.findByMember(member)
@@ -76,11 +75,9 @@ public class LoginService {
         return resultMap;
     }
 
-    //회원정보조회
-    @Transactional(readOnly = true)
-    public SignResponseDTO getMember(SignRequestDTO requestDTO) throws Exception{
-        Member member = loginRepository.findByMemberEmail(requestDTO.getMemberEmail())
-                .orElseThrow(() -> new Exception("계정을 찾을 수 없습니다."));
-        return new SignResponseDTO(member);
+    //엑세스토큰 재발행
+    public String renewAccessToken(String refreshToken) {
+        return tokenProvider.renewAccessTokenUsingRefreshToken(refreshToken);
     }
+
 }

@@ -79,11 +79,11 @@ For building and running the application you need:
 # Main Function 📦
 
 ---
-### ⭐️  -정재민
+### ⭐️ Spring Security / Member / LOGIN -정재민
 
-### ⭐️  - 정민호
+### ⭐️ Spring CRUD Feed / FILE - 정민호
 
-### ⭐️  -권은지
+### ⭐️ REACT - 권은지
 
 ---
 ## Architecture

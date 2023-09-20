@@ -20,47 +20,43 @@ public class SignService {
 
     //회원가입
     @Transactional
-    public boolean register(SignRequestDTO requestDTO) throws Exception{
+    public void register(SignRequestDTO requestDTO) throws Exception{
         try{
             //회원가입과정
-            Member member = Member.builder()
+            Member member = Member.builder()선
                     .memberEmail(requestDTO.getMemberEmail())
                     .memberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()))
                     .memberNickname(requestDTO.getMemberNickname())
-                    .isDeleted("N")
+                    .isDeleted(false)
                     .memberRole(MemberRole.MEMBER)
                     .build();
 
             memberRepository.save(member);
         } catch (Exception e){
-            System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");
         }
-        return true;
     }
 
     //닉네임 중복조회
     @Transactional(readOnly = true)
-    public boolean checkDuplicateMemberNickname(String memberNickname) throws Exception {
+    public void checkDuplicateMemberNickname(String memberNickname) throws Exception {
 
-        if(memberRepository.existsByMemberNickname(memberNickname)){
-            throw new Exception("사용중인 닉네임 입니다.");
-            }
-        return true;
+        if (memberNickname == null || memberNickname.trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일 값이 유효하지 않습니다.");
+        } else if(memberRepository.existsByMemberNickname(memberNickname)){
+            throw new IllegalArgumentException("사용중인 닉네임 입니다.");
+        }
     }
 
     //아이디 중복조회
     @Transactional(readOnly = true)
-    public boolean checkDuplicateMemberEmail(String memberEmail) throws Exception {
+    public void checkDuplicateMemberEmail(String memberEmail) throws Exception {
 
         if (memberEmail == null || memberEmail.trim().isEmpty()) {
             throw new IllegalArgumentException("이메일 값이 유효하지 않습니다.");
+        }else if(memberRepository.existsByMemberEmail(memberEmail)){
+            throw new IllegalArgumentException("사용중인 이메일 입니다.");
         }
-
-        if(memberRepository.existsByMemberEmail(memberEmail)){
-            throw new Exception("사용중인 이메일 입니다.");
-        }
-        return true;
     }
 
     //회원탈퇴
@@ -68,17 +64,18 @@ public class SignService {
     public void deleteMember(Long memberNo) {
         Member member = memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
-
-        memberRepository.delete(member);
+        memberRepository.deleteByMemberNo(memberNo);
     }
     //비밀번호변경
     @Transactional
-    public void changeMemberPwd(UpdatePwdRequestDTO requestDTO, Long memberNo) {
+    public void changeMemberPwd(UpdatePwdRequestDTO requestDTO,Long memberNo) {
         Member member = memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(requestDTO.getCurrentPassword(), member.getMemberPwd())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }else if(!passwordEncoder.matches(requestDTO.getCurrentPassword(),requestDTO.getMemberPwd())){
+            throw new IllegalArgumentException("같은 비밀번호는 변경할수 없습니다.");
         }
 
         member.setMemberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()));
@@ -88,7 +85,7 @@ public class SignService {
     //회원정보변경
     // 회원 정보 변경
     @Transactional
-    public void updateMemberInfo(UpdateInfoRequestDTO requestDTO, Long memberNo) {
+    public void updateMemberInfo(UpdateInfoRequestDTO requestDTO,Long memberNo) {
         Member member = memberRepository.findMemberByMemberNo(memberNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다."));
 
