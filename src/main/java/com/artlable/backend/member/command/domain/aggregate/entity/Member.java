@@ -28,9 +28,6 @@ public class Member extends AuditingFields {
     @Column(length = 200)
     private String memberPwd; //로그인 비밀번호
 
-    @Column(nullable = false)
-    private String isDeleted; // 활성화 상태
-
     @Column(length = 300)
     private String memberImage; // 프로필 사진
     //권한
@@ -40,6 +37,9 @@ public class Member extends AuditingFields {
 
     @Column
     private String memberNickname;
+
+    @Column
+    private boolean isDeleted;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Feed> feedLists;
@@ -58,15 +58,15 @@ public class Member extends AuditingFields {
     private List<Authority> authority;
 
     @Builder
-    public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage,
-                  String memberNickname, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
+    public Member(Long memberNo, String memberEmail, String memberPwd,  String memberImage,
+                  String memberNickname, boolean isDeleted, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
                   List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;
-        this.isDeleted = isDeleted;
         this.memberImage = memberImage;
         this.memberNickname = memberNickname;
+        this.isDeleted = isDeleted;
         this.memberRole = memberRole;
         this.feedLists = feedLists;
         this.commentLists = commentList;

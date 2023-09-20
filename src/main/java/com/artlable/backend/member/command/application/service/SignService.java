@@ -23,11 +23,11 @@ public class SignService {
     public void register(SignRequestDTO requestDTO) throws Exception{
         try{
             //회원가입과정
-            Member member = Member.builder()
+            Member member = Member.builder()선
                     .memberEmail(requestDTO.getMemberEmail())
                     .memberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()))
                     .memberNickname(requestDTO.getMemberNickname())
-                    .isDeleted("N")
+                    .isDeleted(false)
                     .memberRole(MemberRole.MEMBER)
                     .build();
 
