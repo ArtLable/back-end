@@ -1,8 +1,9 @@
 //package com.artlable.backend.file.command.application.controller;
 //
 //import com.artlable.backend.file.command.application.service.FileService;
+//import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
-//import org.springframework.beans.factory.annotation.Autowired;
+//import lombok.RequiredArgsConstructor;
 //import org.springframework.http.HttpHeaders;
 //import org.springframework.http.HttpStatus;
 //import org.springframework.http.MediaType;
@@ -10,18 +11,13 @@
 //import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.multipart.MultipartFile;
 //
-//import java.io.IOException;
-//
+//@Api(tags= "FILE CRUD API")
 //@RestController
 //@RequestMapping("/api/v1")
+//@RequiredArgsConstructor
 //public class FileController {
 //
 //    private final FileService fileService;
-//
-//    @Autowired
-//    public FileController(FileService fileService) {
-//        this.fileService = fileService;
-//    }
 //
 //    @ApiOperation(value = "파일 업로드")
 //    @PostMapping("/files")

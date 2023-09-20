@@ -76,8 +76,12 @@ public class LoginService {
     }
 
     //엑세스토큰 재발행
-    public String renewAccessToken(String refreshToken) {
-        return tokenProvider.renewAccessTokenUsingRefreshToken(refreshToken);
+    public Map<String, Object> renewAccessToken(String refreshToken) {
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("accessToken",tokenProvider.renewAccessTokenUsingRefreshToken(refreshToken));
+
+        return resultMap;
     }
 
 }

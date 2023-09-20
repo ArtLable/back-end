@@ -48,31 +48,8 @@ public class File extends AuditingFields {
         this.feed = feed;
     }
 
-    public void setFileNo(Long fileNo) {
-        this.fileNo = fileNo;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
     public void setMemberNo(Member member) {
         this.member = member;
     }
 
-    public void setFeedNo(Feed feed) {
-        this.feed = feed;
-    }
 }

@@ -19,9 +19,4 @@ public class ResponseMessage {
         this.results = results;
     }
 
-    public ResponseMessage(int httpStatus, String message){
-        this.httpStatus = httpStatus;
-        this.message = message;
-    }
-
 }

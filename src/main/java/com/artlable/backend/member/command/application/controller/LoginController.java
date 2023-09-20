@@ -9,10 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -29,12 +26,11 @@ public class LoginController {
 
     @ApiOperation(value = "로그인 요청")
     @PostMapping(value = "/authentication/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) throws Exception{
+    public ResponseEntity<ResponseMessage> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) {
 
         try{
 
         Map<String, Object> loginResult = loginService.login(requestDTO);
-        LoginResponseDTO loginResponse = (LoginResponseDTO) loginResult.get("loginResponse");
 
         // 리프레시 토큰을 HTTP Only 헤더에 설정
         String refreshToken = (String) loginResult.get("refreshToken");
@@ -44,10 +40,9 @@ public class LoginController {
         refreshTokenCookie.setPath("/");
         response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "로그인 성공.",loginResult));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage(),null));
         }
     }
 
@@ -55,7 +50,7 @@ public class LoginController {
 
     @ApiOperation(value = "액세스 토큰 재발급 요청")
     @PostMapping("/authentication/renew")
-    public ResponseEntity<?> renewAccessToken(HttpServletRequest request) {
+    public ResponseEntity<ResponseMessage> renewAccessToken(HttpServletRequest request) {
         // 쿠키에서 리프레시 토큰을 가져옵니다.
         Cookie[] cookies = request.getCookies();
         String refreshToken = null;
@@ -67,23 +62,21 @@ public class LoginController {
             }
         }
         if (refreshToken == null) {
-            ResponseMessage responseMessage = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "로그인이 만료되었습니다.");
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), "만료된 정보입니다.",null));
         }
         try {
             // 액세스 토큰을 재발급 받습니다.
-            String newAccessToken = loginService.renewAccessToken(refreshToken);
-            return ResponseEntity.ok(newAccessToken);
+            Map<String, Object> tokenResult = loginService.renewAccessToken(refreshToken);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(),"access토근 발급완료",tokenResult));
         } catch (Exception e) {
-            ResponseMessage responseMessage = new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
 
 
     @ApiOperation(value = "로그아웃 요청") // 쿠키에 refresh토큰 삭제
-    @PostMapping("/authentication/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
+    @DeleteMapping("/authentication/login")
+    public ResponseEntity<ResponseMessage> logout(HttpServletResponse response) {
         try {
             // 리프레시 토큰 쿠키 삭제
             Cookie refreshTokenCookie = new Cookie("refreshToken", null);
@@ -93,10 +86,9 @@ public class LoginController {
             refreshTokenCookie.setMaxAge(0); // 쿠키 만료
             response.addCookie(refreshTokenCookie);
 
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(),"로그아웃",null));
         } catch(Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null));
         }
     }
 }
