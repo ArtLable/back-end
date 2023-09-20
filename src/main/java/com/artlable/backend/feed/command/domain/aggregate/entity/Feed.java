@@ -3,7 +3,7 @@ package com.artlable.backend.feed.command.domain.aggregate.entity;
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.file.command.domain.aggregate.entity.File;
-import com.artlable.backend.like.command.domain.aggregate.entity.Like;
+import com.artlable.backend.like.command.domain.aggregate.entity.Likes;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.report.command.domain.aggregate.entity.Report;
 import lombok.AccessLevel;
@@ -45,17 +45,15 @@ public class Feed extends AuditingFields {
     @Column
     private boolean feedIsDeleted;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "like_no")
-    private List<Like> likeList;
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
+    private List<Likes> likesList;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "report_no")
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
     private List<Report> reportList;
 
     @Builder
     public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<File> file,
-                List<Comment> commentList, boolean feedIsDeleted, List<Like> likeList, List<Report> reportList) {
+                List<Comment> commentList, boolean feedIsDeleted, List<Likes> likesList, List<Report> reportList) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
@@ -63,7 +61,7 @@ public class Feed extends AuditingFields {
         this.file = file;
         this.commentList = commentList;
         this.feedIsDeleted = feedIsDeleted;
-        this.likeList = likeList;
+        this.likesList = likesList;
         this.reportList = reportList;
     }
 

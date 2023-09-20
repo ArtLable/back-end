@@ -23,11 +23,11 @@ public class Report extends AuditingFields {
     private Long reportNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no")
+    @JoinColumn(name = "reporter_member_no")
     private Member reporter; //신고자
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_no")
+    @JoinColumn(name = "reportee_member_no")
     private Member reportee; //피신고자
 
     @ManyToOne(fetch = FetchType.LAZY)

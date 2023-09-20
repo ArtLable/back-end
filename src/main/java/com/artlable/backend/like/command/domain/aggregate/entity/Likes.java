@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like extends AuditingFields {
+public class Likes extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +21,12 @@ public class Like extends AuditingFields {
     @JoinColumn(name = "member_no")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feed_no")
     private Feed feed;
 
     @Builder
-    public Like(Long likeNo, Member member, Feed feed) {
+    public Likes(Long likeNo, Member member, Feed feed) {
         this.likeNo = likeNo;
         this.member = member;
         this.feed = feed;
