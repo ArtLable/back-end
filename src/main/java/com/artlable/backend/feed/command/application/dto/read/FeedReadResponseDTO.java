@@ -2,8 +2,8 @@ package com.artlable.backend.feed.command.application.dto.read;
 
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
-import com.artlable.backend.file.command.domain.aggregate.entity.File;
-import com.artlable.backend.like.command.domain.aggregate.entity.Likes;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
+import com.artlable.backend.likes.command.domain.aggregate.entity.Likes;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class FeedReadResponseDTO {
         this.memberNickname = feed.getMember().getMemberNickname();
         this.feedContent = feed.getFeedContent();
         this.feedCategory = feed.getFeedCategory();
-        this.fileNo = feed.getFile().stream().map(File::getFileNo)
+        this.fileNo = feed.getFile().stream().map(Files::getFileNo)
                 .collect(Collectors.toList());
         this.commentNo = feed.getCommentList().stream().map(Comment::getCommentNo)
                 .collect(Collectors.toList());
