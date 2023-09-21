@@ -3,6 +3,8 @@ package com.artlable.backend.member.command.domain.aggregate.entity;
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
+import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.like.command.domain.aggregate.entity.Likes;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,19 +41,19 @@ public class Member extends AuditingFields {
     private String memberNickname;
 
     @Column
-    private boolean isDeleted;
+    private boolean memberIsDeleted;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Feed> feedLists;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Comment> commentLists;
-//
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-//    private List<Like> likeList;
-//
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-//    private List<File> fileList;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Likes> likeList;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<File> fileList;
 
     //소셜 로그인 테이블 조인
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -59,17 +61,19 @@ public class Member extends AuditingFields {
 
     @Builder
     public Member(Long memberNo, String memberEmail, String memberPwd,  String memberImage,
-                  String memberNickname, boolean isDeleted, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
-                  List<Authority> authority){
+                  String memberNickname, boolean memberIsDeleted, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
+                  List<Likes> likeList, List<File> fileList, List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;
         this.memberImage = memberImage;
         this.memberNickname = memberNickname;
-        this.isDeleted = isDeleted;
+        this.memberIsDeleted = memberIsDeleted;
         this.memberRole = memberRole;
         this.feedLists = feedLists;
         this.commentLists = commentList;
+        this.likeList = likeList;
+        this.fileList = fileList;
         this.authority = authority;
     }
 
@@ -80,6 +84,13 @@ public class Member extends AuditingFields {
 
     //닉네임 변경
     public void setMemberNickname(String memberNickname) {
+        this.memberNickname = memberNickname;
+    }
+
+    //회원탈퇴
+    public void deleteMember(String memberEmail, boolean memberIsDeleted, String memberNickname) {
+        this.memberEmail = memberEmail;
+        this.memberIsDeleted = memberIsDeleted;
         this.memberNickname = memberNickname;
     }
 

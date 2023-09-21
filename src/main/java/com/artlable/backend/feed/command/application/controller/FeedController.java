@@ -32,11 +32,9 @@ public class FeedController {
             Map<String, Object> responseMap = new HashMap<>();
             List<FeedReadResponseDTO> feeds = feedService.findAllFeeds();
             responseMap.put("feeds", feeds);
-
-            return ResponseEntity.ok().body(responseMap);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "전체피드 조회성공",responseMap));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
 
@@ -49,10 +47,9 @@ public class FeedController {
             FeedReadResponseDTO feed = feedService.findFeed(feedNo);
             responseMap.put("feeds", feed);
 
-            return ResponseEntity.ok().body(responseMap);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "단일피드 조회성공",responseMap));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
 
     }
@@ -66,10 +63,9 @@ public class FeedController {
             Long feedNo = feedService.createFeed(requestDTO, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("feedNo",feedNo);
-            return ResponseEntity.ok().body(responseMap);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(HttpStatus.CREATED.value(), "피드작성 성공",responseMap));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
 
@@ -83,10 +79,9 @@ public class FeedController {
             Long resultFeedNo = feedService.updateFeed(feedNo,requestDTO, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("feedNo",resultFeedNo);
-            return ResponseEntity.ok().body(responseMap);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "피드수정 성공",responseMap));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
 
@@ -99,10 +94,9 @@ public class FeedController {
             Long resultFeedNo = feedService.deleteFeed(feedNo, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("feedNo",resultFeedNo);
-            return ResponseEntity.ok().body(responseMap);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "피드삭제 성공",responseMap));
         } catch (Exception e){
-            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-            return ResponseEntity.badRequest().body(responseMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
 

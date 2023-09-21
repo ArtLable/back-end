@@ -9,6 +9,7 @@ import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,12 @@ public class FeedService {
     //글 작성
     @Transactional
     public Long createFeed(FeedCreateRequestDTO requestDTO, String accessToken) {
+
+        // 토큰의 유효성 검사
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+
         // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
         String userEmail = authentication.getName();
@@ -77,6 +84,12 @@ public class FeedService {
     //피드 수정
     @Transactional
     public Long updateFeed(Long feedNo, FeedUpdateRequestDTO requestDTO, String accessToken) {
+
+        // 토큰의 유효성 검사
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+
         // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
         String userEmail = authentication.getName();
