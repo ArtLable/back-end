@@ -3,15 +3,13 @@ package com.artlable.backend.file.command.domain.aggregate.entity;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "file_tbl")
 @Getter
-@ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class File extends AuditingFields {
 
     @Id
@@ -19,38 +17,35 @@ public class File extends AuditingFields {
     @Column(name = "file_no")
     private Long fileNo;
 
-    @Column(name = "file_name")
+    @Column
     private String fileName;
 
-    @Column(name = "file_type")
+    @Column
     private String fileType;
 
-    @Column(name = "file_size")
+    @Column
     private Long fileSize;
 
-    @Column(name = "file_path")
+    @Column
     private String filePath;
 
     @ManyToOne
-    @JoinColumn(name = "member_no")
-    private Member memberNo;
+    @JoinColumn
+    private Member member;
 
-//    @ManyToOne
-//    @JoinColumn(name = "feed_No")
-//    private Feed feedNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_no")
+    private Feed feed;
 
-    public File(String filePath) {
-
-    }
-
-    public File(Long fileNo, String fileName, String fileType, Long fileSize, String filePath, Member memberNo, Feed feedNo) {
+    @Builder
+    public File(Long fileNo, String fileName, String fileType, Long fileSize, String filePath, Member member, Feed feed) {
         this.fileNo = fileNo;
         this.fileName = fileName;
         this.fileType = fileType;
         this.fileSize = fileSize;
         this.filePath = filePath;
-        this.memberNo = memberNo;
-//        this.feedNo = feedNo;
+        this.member = member;
+        this.feed = feed;
     }
 
     public void setFileNo(Long fileNo) {
@@ -73,11 +68,11 @@ public class File extends AuditingFields {
         this.filePath = filePath;
     }
 
-    public void setMemberNo(Member memberNo) {
-        this.memberNo = memberNo;
+    public void setMemberNo(Member member) {
+        this.member = member;
     }
-//
-//    public void setFeedNo(Feed feedNo) {
-//        this.feedNo = feedNo;
-//    }
+
+    public void setFeedNo(Feed feed) {
+        this.feed = feed;
+    }
 }
