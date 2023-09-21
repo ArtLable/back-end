@@ -18,16 +18,16 @@ public class Files extends AuditingFields {
     private Long fileNo;
 
     @Column
-    private String originFileName;
+    private String originFileName; //원래이름
 
     @Column
-    private String fileName;
+    private String fileName; //저장된 이름
 
     @Column
-    private boolean filesIsDeleted;
+    private Boolean filesIsDeleted; //조회불가처리
 
     @Column
-    private String filePath;
+    private String filePath; //경로
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
@@ -38,7 +38,7 @@ public class Files extends AuditingFields {
     private Feed feed;
 
     @Builder
-    public Files(Long fileNo, String originFileName, String fileName, boolean filesIsDeleted,
+    public Files(Long fileNo, String originFileName, String fileName, Boolean filesIsDeleted,
                  String filePath, Member member, Feed feed) {
         this.fileNo = fileNo;
         this.fileName = fileName;

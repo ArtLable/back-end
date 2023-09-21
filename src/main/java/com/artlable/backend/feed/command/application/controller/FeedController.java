@@ -26,7 +26,7 @@ public class FeedController {
 
     @ApiOperation(value = "전체 피드 조회")
     @GetMapping("/feeds")
-    public ResponseEntity<?> findAllFeeds() {
+    public ResponseEntity<ResponseMessage> findAllFeeds() {
 
         try{
             Map<String, Object> responseMap = new HashMap<>();
@@ -40,7 +40,7 @@ public class FeedController {
 
     @ApiOperation(value = "피드 번호로 조회")
     @GetMapping("/feeds/{feedNo}")
-    public ResponseEntity<?> findFeedById(@PathVariable Long feedNo) {
+    public ResponseEntity<ResponseMessage> findFeedById(@PathVariable Long feedNo) {
 
         try{
             Map<String, Object> responseMap = new HashMap<>();
@@ -56,7 +56,7 @@ public class FeedController {
 
     @ApiOperation(value = "피드 작성")
     @PostMapping("/feeds")
-    public ResponseEntity<?> createFeed(@RequestBody FeedCreateRequestDTO requestDTO,
+    public ResponseEntity<ResponseMessage> createFeed(@RequestBody FeedCreateRequestDTO requestDTO,
                                         @RequestHeader("Authorization") String accessToken) {
 
         try {
@@ -71,7 +71,7 @@ public class FeedController {
 
     @ApiOperation(value = "피드 수정")
     @PutMapping("/feeds/{feedNo}")
-    public ResponseEntity<?> modifyInfo(@PathVariable Long feedNo,
+    public ResponseEntity<ResponseMessage> modifyInfo(@PathVariable Long feedNo,
                                         @RequestBody FeedUpdateRequestDTO requestDTO,
                                         @RequestHeader("Authorization") String accessToken) {
 
@@ -87,7 +87,7 @@ public class FeedController {
 
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/feeds/{feedNo}")
-    public ResponseEntity<?> removeFeed(@PathVariable Long feedNo,
+    public ResponseEntity<ResponseMessage> removeFeed(@PathVariable Long feedNo,
                                         @RequestHeader("Authorization") String accessToken) {
 
         try {
