@@ -41,6 +41,7 @@ public class FileController {
         return ResponseEntity.ok(ApiResponse.success("업로드 성공",
                 fileService.createAISingleFile(fileNo, singleFileDTO)));
     }
+}
 
 
 //    @Autowired
