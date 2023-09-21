@@ -2,8 +2,8 @@ package com.artlable.backend.feed.command.domain.aggregate.entity;
 
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.file.command.domain.aggregate.entity.File;
-import com.artlable.backend.like.command.domain.aggregate.entity.Likes;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
+import com.artlable.backend.likes.command.domain.aggregate.entity.Likes;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.report.command.domain.aggregate.entity.Report;
 import lombok.AccessLevel;
@@ -36,7 +36,7 @@ public class Feed extends AuditingFields {
 
     @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
-    private List<File> file;
+    private List<Files> file;
 
     @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
     @OrderBy("commentNo asc")
@@ -52,7 +52,7 @@ public class Feed extends AuditingFields {
     private List<Report> reportList;
 
     @Builder
-    public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<File> file,
+    public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<Files> file,
                 List<Comment> commentList, boolean feedIsDeleted, List<Likes> likesList, List<Report> reportList) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;

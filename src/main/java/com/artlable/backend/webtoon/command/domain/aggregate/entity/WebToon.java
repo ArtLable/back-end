@@ -1,7 +1,7 @@
 package com.artlable.backend.webtoon.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
@@ -49,7 +49,7 @@ public class WebToon extends AuditingFields {
     private Member memberNo;
 
     public WebToon(Long webToonNo, String webToonContent, String webToonTitle, String webToonType, String characterName,
-                   List<File> fileNo, List<File> fileName, List<File> filePath, Member memberNo) {
+                   List<Files> fileNo, List<Files> fileName, List<Files> filePath, Member memberNo) {
         this.webToonNo = webToonNo;
         this.webToonContent = webToonContent;
         this.webToonTitle = webToonTitle;

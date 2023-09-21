@@ -3,8 +3,8 @@ package com.artlable.backend.member.command.domain.aggregate.entity;
 import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
-import com.artlable.backend.file.command.domain.aggregate.entity.File;
-import com.artlable.backend.like.command.domain.aggregate.entity.Likes;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
+import com.artlable.backend.likes.command.domain.aggregate.entity.Likes;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,16 +53,16 @@ public class Member extends AuditingFields {
     private List<Likes> likeList;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    private List<File> fileList;
+    private List<Files> fileList;
 
     //소셜 로그인 테이블 조인
     @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Authority> authority;
 
     @Builder
-    public Member(Long memberNo, String memberEmail, String memberPwd,  String memberImage,
+    public Member(Long memberNo, String memberEmail, String memberPwd, String memberImage,
                   String memberNickname, boolean memberIsDeleted, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
-                  List<Likes> likeList, List<File> fileList, List<Authority> authority){
+                  List<Likes> likeList, List<Files> fileList, List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;

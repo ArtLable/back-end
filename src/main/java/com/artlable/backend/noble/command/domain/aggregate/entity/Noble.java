@@ -1,7 +1,7 @@
 package com.artlable.backend.noble.command.domain.aggregate.entity;
 
 import com.artlable.backend.common.AuditingFields;
-import com.artlable.backend.file.command.domain.aggregate.entity.File;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import lombok.Getter;
 import lombok.ToString;
@@ -49,7 +49,7 @@ public class Noble extends AuditingFields {
 //    private List<File> filePath;
 
     public Noble(Long nobleNo, String nobleContent, String noble_title, String noble_type,
-                 String character_name, List<File> fileNo, List<File> fileName, List<File> filePath, Member memberNo) {
+                 String character_name, List<Files> fileNo, List<Files> fileName, List<Files> filePath, Member memberNo) {
         this.nobleNo = nobleNo;
         this.nobleContent = nobleContent;
         this.noble_title = noble_title;

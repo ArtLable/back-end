@@ -66,7 +66,6 @@ public class SecurityConfig {
 //                예외처리 필요할때 활성화
 //                )
                 .anyRequest().authenticated() // 그 외 인증 없이 접근X
-
                 .and()
                 .apply(new JwtConfig(tokenProvider)); // JwtFilter를 addFilterBefore로 등록했던 JwtConfig class 적용
 
