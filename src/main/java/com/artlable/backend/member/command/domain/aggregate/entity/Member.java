@@ -1,5 +1,6 @@
 package com.artlable.backend.member.command.domain.aggregate.entity;
 
+import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.common.AuditingFields;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
@@ -18,6 +19,7 @@ public class Member extends AuditingFields {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_no")
     private Long memberNo; //회원관리번호
 
     @Column(length = 100, nullable = false, unique = true)
@@ -25,9 +27,6 @@ public class Member extends AuditingFields {
 
     @Column(length = 200)
     private String memberPwd; //로그인 비밀번호
-
-    @Column(nullable = false)
-    private String isDeleted; // 활성화 상태
 
     @Column(length = 300)
     private String memberImage; // 프로필 사진
@@ -39,11 +38,14 @@ public class Member extends AuditingFields {
     @Column
     private String memberNickname;
 
+    @Column
+    private boolean isDeleted;
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Feed> feedLists;
 
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-//    private List<Comment> commentLists;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Comment> commentLists;
 //
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
 //    private List<Like> likeList;
@@ -56,16 +58,18 @@ public class Member extends AuditingFields {
     private List<Authority> authority;
 
     @Builder
-    public Member(Long memberNo, String memberEmail, String memberPwd, String isDeleted, String memberImage,
-                  String memberNickname, MemberRole memberRole, List<Feed> feedLists, List<Authority> authority){
+    public Member(Long memberNo, String memberEmail, String memberPwd,  String memberImage,
+                  String memberNickname, boolean isDeleted, MemberRole memberRole, List<Feed> feedLists, List<Comment> commentList,
+                  List<Authority> authority){
         this.memberNo = memberNo;
         this.memberEmail = memberEmail;
         this.memberPwd = memberPwd;
-        this.isDeleted = isDeleted;
         this.memberImage = memberImage;
         this.memberNickname = memberNickname;
+        this.isDeleted = isDeleted;
         this.memberRole = memberRole;
         this.feedLists = feedLists;
+        this.commentLists = commentList;
         this.authority = authority;
     }
 

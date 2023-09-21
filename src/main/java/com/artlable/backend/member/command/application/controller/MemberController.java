@@ -1,5 +1,6 @@
 package com.artlable.backend.member.command.application.controller;
 
+import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.member.command.application.dto.sign.SignRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdateInfoRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdatePwdRequestDTO;
@@ -24,55 +25,73 @@ public class MemberController {
 
     @ApiOperation(value = "일반 회원가입")
     @PostMapping(value = "/members")
-    public ResponseEntity<Boolean> signup(@Valid @RequestBody SignRequestDTO requestDTO) throws Exception{
-        return new ResponseEntity<>
-                (signService.register(requestDTO),HttpStatus.OK);
+    public ResponseEntity<?> signup(@Valid @RequestBody SignRequestDTO requestDTO) {
+        try{
+            signService.register(requestDTO);
+            return  ResponseEntity.ok("회원가입 완료");
+        } catch (Exception e){
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
+        }
     }
 
     @ApiOperation(value = "닉네임 중복 조회")
     @GetMapping(value="/members/nickname/{memberNickname}/check")
-    public ResponseEntity<String> checkMemberNickname(@PathVariable String memberNickname) throws Exception {
-        signService.checkDuplicateMemberNickname(memberNickname);
-        return ResponseEntity.ok("사용 가능한 닉네임 입니다.");
+    public ResponseEntity<?> checkMemberNickname(@PathVariable String memberNickname) {
+        try {
+            signService.checkDuplicateMemberNickname(memberNickname);
+            return ResponseEntity.ok("사용 가능한 닉네임 입니다.");
+        } catch (Exception e){
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
+        }
     }
 
     @ApiOperation(value = "이메일 중복 조회")
     @GetMapping(value="/members/email/{memberEmail}/check")
-    public ResponseEntity<String> checkMemberEmail(@PathVariable String memberEmail) throws Exception {
-        signService.checkDuplicateMemberEmail(memberEmail);
-        return ResponseEntity.ok("사용 가능한 이메일 입니다..");
+    public ResponseEntity<?> checkMemberEmail(@PathVariable String memberEmail) {
+        try {
+            signService.checkDuplicateMemberEmail(memberEmail);
+            return ResponseEntity.ok("사용 가능한 이메일 입니다..");
+        } catch (Exception e){
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
+        }
     }
 
     @ApiOperation(value = "비밀번호 변경")
     @PutMapping("/members/pwd/{memberNo}")
-    public ResponseEntity<String> changePassword(@PathVariable Long memberNo, @RequestBody UpdatePwdRequestDTO requestDTO) {
+    public ResponseEntity<?> changePassword(@PathVariable Long memberNo, @RequestBody UpdatePwdRequestDTO requestDTO) {
         try {
             signService.changeMemberPwd(requestDTO, memberNo);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
     @ApiOperation(value = "회원 정보 변경")
     @PutMapping("/members/info/{memberNo}")
-    public ResponseEntity<String> updateMemberInfo(@PathVariable Long memberNo, @RequestBody UpdateInfoRequestDTO requestDTO) {
+    public ResponseEntity<?> updateMemberInfo(@PathVariable Long memberNo, @RequestBody UpdateInfoRequestDTO requestDTO) {
         try {
             signService.updateMemberInfo(requestDTO, memberNo);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 
     @ApiOperation(value = "회원탈퇴")
     @DeleteMapping(value="/members/{memberNo}")
-    public ResponseEntity<String> deleteMember(@PathVariable Long memberNo) {
+    public ResponseEntity<?> deleteMember(@PathVariable Long memberNo) {
         try {
             signService.deleteMember(memberNo);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            ResponseMessage responseMessage =new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+            return ResponseEntity.badRequest().body(responseMessage);
         }
     }
 }

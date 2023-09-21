@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthResponseDTO {
 
+    //로그인응답 (토큰응답)
     private String accessToken;
     private MemberSocialLogin memberSocialLogin;
 

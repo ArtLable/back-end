@@ -42,6 +42,7 @@ public class FileController {
                 fileService.createAISingleFile(fileNo, singleFileDTO)));
     }
 
+
 //    @Autowired
 //    public FileController(FileService fileService) {
 //        this.fileService = fileService;
@@ -57,6 +58,7 @@ public class FileController {
 //    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files) {
 //        try {
 //            fileService.uploadFile(files);
+
 //            return ResponseEntity.status(HttpStatus.OK).body("파일 업로드 성공");
 //        } catch (Exception e) {
 //            e.printStackTrace();
@@ -64,7 +66,6 @@ public class FileController {
 //                    .body("파일 업로드 실패: " + e.getMessage());
 //        }
 //    }
-
 //    @ApiOperation(value = "파일 다운로드")
 //    @GetMapping("/files/{fileNo}")
 //    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileNo) {
@@ -82,4 +83,5 @@ public class FileController {
 //            throw new RuntimeException("파일 다운로드 실패: " + e.getMessage());
 //        }
 //    }
-}
+
+
