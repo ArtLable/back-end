@@ -1,23 +1,48 @@
-//package com.artlable.backend.file.command.application.controller;
-//
-//import com.artlable.backend.file.command.application.service.FileService;
-//import io.swagger.annotations.ApiOperation;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.MediaType;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.multipart.MultipartFile;
-//
-//import java.io.IOException;
-//
-//@RestController
-//@RequestMapping("/api/v1")
-//public class FileController {
-//
-//    private final FileService fileService;
-//
+package com.artlable.backend.file.command.application.controller;
+
+import com.artlable.backend.common.response.ApiResponse;
+import com.artlable.backend.file.command.application.dto.SingleFileRequest;
+import com.artlable.backend.file.command.application.service.FileService;
+import com.artlable.backend.member.command.domain.aggregate.entity.Member;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
+@RestController
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
+@CrossOrigin(origins = {"*"})
+public class FileController {
+
+    private final FileService fileService;
+    private Long fileNo;
+
+    @ApiOperation(value = "파일 업로드")
+    @PostMapping("/files")
+    public ResponseEntity<ApiResponse> uploadSingleFile(@RequestParam MultipartFile webToonSingleFile,
+                                                        @RequestParam MultipartFile nobleSingleFile,
+                                                        SingleFileRequest singleFileDTO) throws IOException {
+        singleFileDTO.setWebToonSingleFile(webToonSingleFile);
+        singleFileDTO.setNobleSingleFile(nobleSingleFile);
+
+        if (webToonSingleFile.isEmpty() || nobleSingleFile.isEmpty()) {
+            throw new IllegalArgumentException("사진을 첨부해주세요");
+        }
+
+        if (!webToonSingleFile.getContentType().startsWith("image") ||
+                !nobleSingleFile.getContentType().startsWith("image")) {
+            throw new IllegalArgumentException("이미지 형식의 파일을 올려주세요");
+        }
+
+        return ResponseEntity.ok(ApiResponse.success("업로드 성공",
+                fileService.createAISingleFile(fileNo, singleFileDTO)));
+    }
+
+
 //    @Autowired
 //    public FileController(FileService fileService) {
 //        this.fileService = fileService;
@@ -25,9 +50,15 @@
 //
 //    @ApiOperation(value = "파일 업로드")
 //    @PostMapping("/files")
-//    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+//    public void uploadFile(@RequestParam("files") MultipartFile[] fileList) throws IOException {
+//        fileService.uploadFile(fileList);
+//    }
+
+
+//    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files) {
 //        try {
-//            fileService.uploadFile(file);
+//            fileService.uploadFile(files);
+
 //            return ResponseEntity.status(HttpStatus.OK).body("파일 업로드 성공");
 //        } catch (Exception e) {
 //            e.printStackTrace();
@@ -35,7 +66,6 @@
 //                    .body("파일 업로드 실패: " + e.getMessage());
 //        }
 //    }
-//
 //    @ApiOperation(value = "파일 다운로드")
 //    @GetMapping("/files/{fileNo}")
 //    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileNo) {
@@ -53,4 +83,5 @@
 //            throw new RuntimeException("파일 다운로드 실패: " + e.getMessage());
 //        }
 //    }
-//}
+
+
