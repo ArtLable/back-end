@@ -9,7 +9,6 @@ import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +127,7 @@ public class FeedService {
             throw new IllegalArgumentException("해당 피드를 수정할 권한이 없습니다.");
         }
 
-        feed.setFeedIsDeleted(true);
+//        feed.setFeedIsDeleted(true);
 
         return feed.getFeedNo();
     }

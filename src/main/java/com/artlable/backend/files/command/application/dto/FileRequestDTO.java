@@ -3,12 +3,10 @@ package com.artlable.backend.files.command.application.dto;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FileRequestDTO {
 
@@ -39,8 +37,4 @@ public class FileRequestDTO {
                 .filePath(this.filePath)
                 .build();
     }
-
-
-
-
 }
