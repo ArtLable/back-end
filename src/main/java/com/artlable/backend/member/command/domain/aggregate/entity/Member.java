@@ -41,7 +41,7 @@ public class Member extends AuditingFields {
     private String memberNickname;
 
     @Column
-    private boolean memberIsDeleted;
+    private Boolean memberIsDeleted;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Feed> feedLists;

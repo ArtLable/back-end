@@ -29,7 +29,6 @@ public class LoginController {
     public ResponseEntity<ResponseMessage> login(@RequestBody LoginRequestDTO requestDTO, HttpServletResponse response) {
 
         try{
-
         Map<String, Object> loginResult = loginService.login(requestDTO);
 
         // 리프레시 토큰을 HTTP Only 헤더에 설정
@@ -39,8 +38,10 @@ public class LoginController {
         refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
         response.addCookie(refreshTokenCookie);
+        // 응답 json맵에서 리프레시 토큰 제거
+        loginResult.remove("refreshToken");
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "로그인 성공.",loginResult));
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "로그인 성공.",loginResult));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ResponseMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage(),null));
         }

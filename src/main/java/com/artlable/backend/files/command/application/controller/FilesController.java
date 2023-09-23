@@ -5,14 +5,17 @@ import com.artlable.backend.files.command.application.dto.FileRequestDTO;
 import com.artlable.backend.files.command.application.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -42,48 +45,42 @@ public class FilesController {
         Map<String, Object> results = Map.of("uploadedFiles", uploadedFiles);
         return ResponseEntity.ok(new ResponseMessage(HttpStatus.OK.value(), "파일이 성공적으로 업로드되었습니다.", results));
     }
+
+    @ApiOperation(value = "파일 다운로드")
+    @GetMapping("/files/{fileNo}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long fileNo) {
+        try {
+            // 파일 리소스 로드
+            Map<String, Object> responseMap = fileService.downloadFile(fileNo);
+            Resource resource = (Resource) responseMap.get("resource");
+            String originalFileName = (String) responseMap.get("originalFileName");
+
+            // 파일 다운로드를 위한 헤더 설정
+            String contentType = "application/octet-stream";
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"")
+                    .body(resource);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "파일을 찾을수없습니다.", ex);
+        }
+    }
+
+    @ApiOperation(value = "이미지 주소 조회")
+    @GetMapping("/files/image/{fileNo}")
+    public ResponseEntity<ResponseMessage> getImageUrl(@PathVariable Long fileNo) {
+        try {
+            String imageUrl = fileService.getImageUrl(fileNo);
+            ResponseMessage responseMessage = new ResponseMessage(
+                    HttpStatus.OK.value(),
+                    "이미지 URL이 성공적으로 조회되었습니다.",
+                    Map.of("imageUrl", imageUrl)
+            );
+            return ResponseEntity.ok().body(responseMessage);
+        } catch (FileNotFoundException ex) {
+            ResponseMessage errorResponse = new ResponseMessage(HttpStatus.NOT_FOUND.value(), "이미지를 찾을 수 없습니다.", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+    }
 }
-
-
-//    @Autowired
-//    public FileController(FileService fileService) {
-//        this.fileService = fileService;
-//    }
-//
-//    @ApiOperation(value = "파일 업로드")
-//    @PostMapping("/files")
-//    public void uploadFile(@RequestParam("files") MultipartFile[] fileList) throws IOException {
-//        fileService.uploadFile(fileList);
-//    }
-
-
-//    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] files) {
-//        try {
-//            fileService.uploadFile(files);
-
-//            return ResponseEntity.status(HttpStatus.OK).body("파일 업로드 성공");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("파일 업로드 실패: " + e.getMessage());
-//        }
-//    }
-//    @ApiOperation(value = "파일 다운로드")
-//    @GetMapping("/files/{fileNo}")
-//    public ResponseEntity<byte[]> downloadFile(@PathVariable Long fileNo) {
-//        try {
-//            byte[] fileContent = fileService.downloadFile(fileNo);
-//
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM); // 바이너리 데이터를 나타내는 미디어 타입 = 다운로드 파일의 컨텐츠 타입으로 사용
-//            headers.setContentDispositionFormData("첨부파일", "파일 이름");
-//
-//            return new ResponseEntity<>(fileContent, headers, HttpStatus.OK);
-//        } catch (Exception e) {
-//            // 파일 다운로드 실패 시 예외 처리
-//            e.printStackTrace();
-//            throw new RuntimeException("파일 다운로드 실패: " + e.getMessage());
-//        }
-//    }
-
-
