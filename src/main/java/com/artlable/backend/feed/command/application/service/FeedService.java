@@ -127,7 +127,7 @@ public class FeedService {
             throw new IllegalArgumentException("해당 피드를 수정할 권한이 없습니다.");
         }
 
-        feed.setFeedIsDeleted(true);
+//        feed.setFeedIsDeleted(true);
 
         return feed.getFeedNo();
     }
