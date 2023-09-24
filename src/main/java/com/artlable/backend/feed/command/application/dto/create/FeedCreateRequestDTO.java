@@ -18,7 +18,8 @@ public class FeedCreateRequestDTO {
     private String feedCategory;
 
     @Builder
-    public FeedCreateRequestDTO(String feedContent, String feedCategory, Boolean feedIsDeleted  ) {
+    public FeedCreateRequestDTO(String feedContent, String feedCategory) {
+
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
     }

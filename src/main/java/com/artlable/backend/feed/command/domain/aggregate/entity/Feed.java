@@ -54,8 +54,8 @@ public class Feed extends AuditingFields {
 
     @Builder
     public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<Files> files,
-                List<Comment> commentList, Boolean feedIsDeleted, List<Likes> likesList, List<Report> reportList) {
 
+                List<Comment> commentList, Boolean feedIsDeleted, List<Likes> likesList, List<Report> reportList) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
