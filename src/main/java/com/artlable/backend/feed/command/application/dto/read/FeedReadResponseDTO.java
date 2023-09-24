@@ -1,10 +1,7 @@
 package com.artlable.backend.feed.command.application.dto.read;
 
-import com.artlable.backend.comment.command.domain.aggregate.entity.Comment;
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
-import com.artlable.backend.files.command.application.dto.FileRequestDTO;
-import com.artlable.backend.files.command.domain.aggregate.entity.Files;
-import com.artlable.backend.likes.command.domain.aggregate.entity.Likes;
+import com.artlable.backend.files.command.application.dto.ReadFeedFileResponseDTO;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +18,7 @@ public class FeedReadResponseDTO {
     private String memberNickname;
     private String feedContent;
     private String feedCategory;
-    private List<Long> fileNo;
+    private List<ReadFeedFileResponseDTO> files;
 //    private List<Long> commentNo;
 //    private List<Long> likesNo;
 
@@ -31,23 +28,23 @@ public class FeedReadResponseDTO {
         this.memberNickname = feed.getMember().getMemberNickname();
         this.feedContent = feed.getFeedContent();
         this.feedCategory = feed.getFeedCategory();
-        this.fileNo = feed.getFileList().stream().map(Files::getFileNo)
+        this.files = feed.getFiles().stream()
+                .map(ReadFeedFileResponseDTO::fromEntity)
                 .collect(Collectors.toList());
 //        this.commentNo = feed.getCommentList().stream().map(Comment::getCommentNo)
 //                .collect(Collectors.toList());
 //        this.likesNo = feed.getLikesList().stream().map(Likes::getLikeNo)
 //                .collect(Collectors.toList());
-
     }
 
     @Builder
-    public FeedReadResponseDTO(Long feedNo, String memberNickname, String feedContent, String feedCategory, List<Long> fileNo,
-                                List<Long> commentNo, List<Long> likesNo) {
+    public FeedReadResponseDTO(Long feedNo, String memberNickname, String feedContent, String feedCategory,
+                               List<ReadFeedFileResponseDTO> files) {
         this.feedNo = feedNo;
         this.memberNickname = memberNickname;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.fileNo = fileNo;
+        this.files = files;
 //        this.commentNo = commentNo;
 //        this.likesNo = likesNo;
     }

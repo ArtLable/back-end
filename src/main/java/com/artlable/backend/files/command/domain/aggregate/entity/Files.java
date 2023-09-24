@@ -53,6 +53,7 @@ public class Files extends AuditingFields {
         this.member = member;
     }
 
+    //피드생성
     public void setFeed(Feed feed) {
         this.feed = feed;
     }

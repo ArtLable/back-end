@@ -19,6 +19,7 @@ public class FeedCreateRequestDTO {
 
     @Builder
     public FeedCreateRequestDTO(String feedContent, String feedCategory) {
+
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
     }
@@ -28,6 +29,7 @@ public class FeedCreateRequestDTO {
         return Feed.builder()
                 .feedContent(feedContent)
                 .feedCategory(feedCategory)
+                .feedIsDeleted(false)
                 .build();
     }
 }

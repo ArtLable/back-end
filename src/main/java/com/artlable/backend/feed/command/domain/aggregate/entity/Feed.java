@@ -37,7 +37,7 @@ public class Feed extends AuditingFields {
 
     @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
-    private List<Files> fileList;
+    private List<Files> files;
 
     @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
     @OrderBy("commentNo asc")
@@ -53,13 +53,14 @@ public class Feed extends AuditingFields {
     private List<Report> reportList;
 
     @Builder
-    public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<Files> fileList,
+    public Feed(Long feedNo, String feedContent, String feedCategory, Member member, List<Files> files,
+
                 List<Comment> commentList, Boolean feedIsDeleted, List<Likes> likesList, List<Report> reportList) {
         this.feedNo = feedNo;
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
         this.member = member;
-        this.fileList = fileList;
+        this.files = files;
         this.commentList = commentList;
         this.feedIsDeleted = feedIsDeleted;
         this.likesList = likesList;
@@ -72,8 +73,9 @@ public class Feed extends AuditingFields {
     }
 
     //피드 삭제 (softDelete)
-    public void setFeedIsDeleted(Boolean feedIsDeleted){ this.feedIsDeleted = feedIsDeleted; }
-
+    public void setFeedIsDeleted(Boolean feedIsDeleted){
+        this.feedIsDeleted = feedIsDeleted;
+    }
 
     //글작성
     public void setMember(Member member) {
