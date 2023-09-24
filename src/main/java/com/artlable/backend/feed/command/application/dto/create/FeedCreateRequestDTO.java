@@ -16,13 +16,11 @@ public class FeedCreateRequestDTO {
 
     private String feedContent;
     private String feedCategory;
-    private List<Files> file;
 
     @Builder
-    public FeedCreateRequestDTO(String feedContent, String feedCategory, List<Files> file) {
+    public FeedCreateRequestDTO(String feedContent, String feedCategory, Boolean feedIsDeleted  ) {
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
-        this.file = file;
     }
 
     //DTO -> Entity
@@ -30,7 +28,7 @@ public class FeedCreateRequestDTO {
         return Feed.builder()
                 .feedContent(feedContent)
                 .feedCategory(feedCategory)
-                .file(file)
+                .feedIsDeleted(false)
                 .build();
     }
 }

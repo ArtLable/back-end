@@ -3,6 +3,7 @@ package com.artlable.backend.member.command.application.service;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.application.dto.sign.SignRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdateInfoRequestDTO;
+import com.artlable.backend.member.command.application.dto.update.UpdatePwdRequestDTO;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.aggregate.entity.enumvalue.MemberRole;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
@@ -87,7 +88,7 @@ public class SignService {
 
     //비밀번호변경
     @Transactional
-    public void changeMemberPwd(UpdateInfoRequestDTO requestDTO,Long memberNo, String accessToken) {
+    public void changeMemberPwd(UpdatePwdRequestDTO requestDTO, Long memberNo, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -105,13 +106,13 @@ public class SignService {
             throw new AccessDeniedException("권한이 없습니다.");
         }
 
-        if (!passwordEncoder.matches(requestDTO.getCurrentPassword(), member.getMemberPwd())) {
+        if (!passwordEncoder.matches(requestDTO.getMemberPwd(), member.getMemberPwd())) {
             throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-        }else if(!passwordEncoder.matches(requestDTO.getCurrentPassword(),requestDTO.getMemberPwd())){
-            throw new IllegalArgumentException("같은 비밀번호는 변경할수 없습니다.");
+        } else if (passwordEncoder.matches(requestDTO.getCurrentPassword(), member.getMemberPwd())) {
+            throw new IllegalArgumentException("같은 비밀번호로는 변경할 수 없습니다.");
         }
 
-        member.setMemberPwd(passwordEncoder.encode(requestDTO.getMemberPwd()));
+        member.setMemberPwd(passwordEncoder.encode(requestDTO.getCurrentPassword()));
     }
 
     //회원정보변경

@@ -3,6 +3,7 @@ package com.artlable.backend.member.command.application.controller;
 import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.member.command.application.dto.sign.SignRequestDTO;
 import com.artlable.backend.member.command.application.dto.update.UpdateInfoRequestDTO;
+import com.artlable.backend.member.command.application.dto.update.UpdatePwdRequestDTO;
 import com.artlable.backend.member.command.application.service.SignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,7 +59,7 @@ public class MemberController {
     @ApiOperation(value = "비밀번호 변경")
     @PutMapping("/members/pwd/{memberNo}")
     public ResponseEntity<ResponseMessage> changePassword(@PathVariable Long memberNo,
-                                                          @RequestBody UpdateInfoRequestDTO requestDTO,
+                                                          @RequestBody UpdatePwdRequestDTO requestDTO,
                                                           @RequestHeader("Authorization") String accessToken) {
         try {
             signService.changeMemberPwd(requestDTO, memberNo, accessToken);
