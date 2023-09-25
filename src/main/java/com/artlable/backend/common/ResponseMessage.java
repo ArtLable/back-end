@@ -13,6 +13,7 @@ public class ResponseMessage {
     private String message;
     private Map<String, Object> results;
 
+    @Builder
     public ResponseMessage(int httpStatus, String message, Map<String, Object> results){
         this.httpStatus = httpStatus;
         this.message = message;

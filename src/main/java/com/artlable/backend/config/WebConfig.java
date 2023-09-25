@@ -3,6 +3,7 @@ package com.artlable.backend.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -28,4 +29,10 @@ public class WebConfig implements WebMvcConfigurer {
                         .codecs(configurer ->
                                 configurer.defaultCodecs().maxInMemorySize(-1)).build());
     }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
 }

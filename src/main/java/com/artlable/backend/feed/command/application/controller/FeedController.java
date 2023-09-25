@@ -60,14 +60,12 @@ public class FeedController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
-
     }
 
     @ApiOperation(value = "피드 작성")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "feed", value = "Feed JSON", required = true, dataType = "string", paramType = "form"),
-            @ApiImplicitParam(name = "files", value = "Files", dataType = "file", paramType = "form", allowMultiple = true)
-    })
+            @ApiImplicitParam(name = "files", value = "Files", dataType = "file", paramType = "form", allowMultiple = true) })
     @PostMapping(value = "/feeds", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createFeed(
             @RequestPart(value = "feed") String feedJson,

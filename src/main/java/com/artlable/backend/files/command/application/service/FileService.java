@@ -102,6 +102,10 @@ public class FileService {
         Member member = memberRepository.findMemberByMemberEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
+        if (!(files==null||!files.isEmpty())) {
+            throw new IllegalArgumentException("파일을 첨부해 주세요.");
+        }
+
         //DTO 반환객체
         List<CreateFeedFileRequestDTO> multiFilesWriteDTOList = new ArrayList<>();
 
