@@ -35,10 +35,6 @@ public class Novel extends AuditingFields {
     private Member member;
 
     @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
-    @OrderBy("resultNo asc")
-    private List<NovelResult> resultList;
-
-    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
     @OrderBy("characterNo asc")
     private List<NovelCharacter> characters;
 
@@ -59,7 +55,6 @@ public class Novel extends AuditingFields {
         this.novelGenre = novelGenre;
         this.novelIsDeleted = novelIsDeleted;
         this.member = member;
-//        this.resultList = resultList;
         this.characters = characters;
         this.summaries = summaries;
         this.files = files;
@@ -97,9 +92,6 @@ public class Novel extends AuditingFields {
         this.summaries = summaries;
     }
 
-//    public void setResultList(List<NovelResult> resultList) {
-//        this.resultList = resultList;
-//    }
 
     public void setFiles(List<Files> files) {
         this.files = files;

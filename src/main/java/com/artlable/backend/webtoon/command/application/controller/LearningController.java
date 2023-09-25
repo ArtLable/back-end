@@ -1,12 +1,12 @@
 package com.artlable.backend.webtoon.command.application.controller;
 
 import com.artlable.backend.common.ResponseMessage;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreate;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceRead;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdate;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningCreate;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningRead;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdate;
+import com.artlable.backend.files.command.application.dto.novel.CreateNovelSummaryFileRequestDTO;
+import com.artlable.backend.files.command.application.dto.webtoon.CreateWebtoonLerningFileRequestDTO;
+import com.artlable.backend.files.command.application.service.FileService;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningCreateDTO;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningReadDTO;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdateDTO;
 import com.artlable.backend.webtoon.command.application.service.LearningService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,26 +14,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(tags= "LEARNING API")
+@Api(tags= "WEBTOON LEARNING API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/webtoons")
 @RequiredArgsConstructor
 public class LearningController {
 
     private final LearningService learningService;
+    private final FileService fileService;
+
 
     @ApiOperation(value = "전체 학습 조회")
     @GetMapping("/learnings")
-    public ResponseEntity<?> findAllLearning() {
+    public ResponseEntity<ResponseMessage> findAllLearning() {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            List<LearningRead> learnings = learningService.findAllLearnings();
+            List<LearningReadDTO> learnings = learningService.findAllLearnings();
             responseMap.put("learnings", learnings);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "전체 학습 조회 성공!", responseMap));
@@ -44,11 +47,11 @@ public class LearningController {
 
     @ApiOperation(value = "학습 번호로 조회")
     @GetMapping("/learnings/{learningNo}")
-    public ResponseEntity<?> findLearningById(@PathVariable Long learningNo) {
+    public ResponseEntity<ResponseMessage> findLearningById(@PathVariable Long learningNo) {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            LearningRead learningRead = learningService.findLearning(learningNo);
+            LearningReadDTO learningRead = learningService.findLearning(learningNo);
             responseMap.put("learnings", learningRead);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "단일 학습 조회 성공",responseMap));
@@ -58,14 +61,22 @@ public class LearningController {
     }
 
     @ApiOperation(value = "학습 작성")
-    @PostMapping("/learnings")
-    public ResponseEntity<?> createNovel(@RequestBody LearningCreate learningCreate,
-                                         @RequestHeader("Authorization") String accessToken) {
+    @PostMapping(value = "/learnings", consumes = "multipart/form-data")
+    public ResponseEntity<ResponseMessage> createNovel(
+            @RequestBody LearningCreateDTO requestDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @RequestHeader("Authorization") String accessToken) {
 
         try {
-            Long learningNo = learningService.createLearning(learningCreate, accessToken);
+            Long learningNo = learningService.createLearning(requestDTO, accessToken);
+            List<CreateWebtoonLerningFileRequestDTO> fileRequestDTO = fileService.WebtoonLearningSaveFile(files, learningNo, accessToken);
+
+            learningService.callExternalServiceAndSaveResult(learningNo, files, requestDTO.getCname(), requestDTO.getSearchText(),accessToken);
+
             Map<String, Object> responseMap = new HashMap<>();
+
             responseMap.put("learningNo",learningNo);
+            responseMap.put("fileNo",fileRequestDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(HttpStatus.CREATED.value(), "학습 생성 성공",responseMap));
         } catch (Exception e){
@@ -75,8 +86,8 @@ public class LearningController {
 
     @ApiOperation(value = "학습 수정")
     @PutMapping("/learnings/{learningNo}")
-    public ResponseEntity<?> modifyInfo(@PathVariable Long learningNo,
-                                        @RequestBody LearningUpdate learningUpdate,
+    public ResponseEntity<ResponseMessage> modifyInfo(@PathVariable Long learningNo,
+                                        @RequestBody LearningUpdateDTO learningUpdate,
                                         @RequestHeader("Authorization") String accessToken) {
 
         try {

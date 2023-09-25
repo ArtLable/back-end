@@ -12,13 +12,13 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NovelCreateSummary {
+public class NovelCreateSummaryDTO {
 
     private String summaryContent;
 //    private List<Files> files;
 
     @Builder
-    public NovelCreateSummary(String summaryContent, List<Files> files) {
+    public NovelCreateSummaryDTO(String summaryContent, List<Files> files) {
         this.summaryContent = summaryContent;
 //        this.files = files;
     }

@@ -3,9 +3,9 @@ package com.artlable.backend.novel.command.domain.service;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
-import com.artlable.backend.novel.command.application.dto.novelsummary.NovelCreateSummary;
-import com.artlable.backend.novel.command.application.dto.novelsummary.NovelReadSummary;
-import com.artlable.backend.novel.command.application.dto.novelsummary.NovelUpdateSummary;
+import com.artlable.backend.novel.command.application.dto.novelsummary.NovelCreateSummaryDTO;
+import com.artlable.backend.novel.command.application.dto.novelsummary.NovelReadSummaryDTO;
+import com.artlable.backend.novel.command.application.dto.novelsummary.NovelUpdateSummaryDTO;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
 import com.artlable.backend.novel.command.domain.repository.NovelSummaryRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class NovelSummaryService {
 
     // 전체 요약 조회
     @Transactional(readOnly = true)
-    public List<NovelReadSummary> findNovelAllSummaries() {
+    public List<NovelReadSummaryDTO> findNovelAllSummaries() {
 
         List<NovelSummary> summaries = novelSummaryRepository.findAll();
-        List<NovelReadSummary> summaryList = new ArrayList<>();
+        List<NovelReadSummaryDTO> summaryList = new ArrayList<>();
 
         for (NovelSummary novelSummary : summaries) {
-            NovelReadSummary novelReadSummary = new NovelReadSummary(novelSummary);
+            NovelReadSummaryDTO novelReadSummary = new NovelReadSummaryDTO(novelSummary);
             summaryList.add(novelReadSummary);
         }
 
@@ -41,17 +41,17 @@ public class NovelSummaryService {
 
     // 특정 요약 조회
     @Transactional(readOnly = true)
-    public NovelReadSummary findSummary(Long summaryNo) {
+    public NovelReadSummaryDTO findSummary(Long summaryNo) {
 
         NovelSummary novelSummary = novelSummaryRepository.findBySummaryNo(summaryNo);
-        NovelReadSummary readSummary = new NovelReadSummary(novelSummary);
+        NovelReadSummaryDTO readSummary = new NovelReadSummaryDTO(novelSummary);
 
         return readSummary;
     }
 
     // 요약 생성
     @Transactional
-    public Long createSummary(NovelCreateSummary novelCreateSummary, String accessToken) {
+    public Long createSummary(NovelCreateSummaryDTO novelCreateSummary, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -74,7 +74,7 @@ public class NovelSummaryService {
 
     // 요약 수정
     @Transactional
-    public Long updateSummary(Long summaryNo, NovelUpdateSummary updateSummary, String accessToken) {
+    public Long updateSummary(Long summaryNo, NovelUpdateSummaryDTO updateSummary, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {

@@ -2,38 +2,47 @@ package com.artlable.backend.webtoon.command.infra.service;
 
 import com.artlable.backend.common.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
-public class WebtoonAiService {
+public class LearningWebtoonService {
 
-    private final String baseUrl = "http://127.0.0.1/step1";
+    private final String baseUrl = "http://192.168.0.23:5000/pcollection";
     private final WebClient webClient;
 
-
     @Autowired
-    public WebtoonAiService(WebClient.Builder webClientBuilder) {
+    public LearningWebtoonService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl(this.baseUrl).build();
     }
 
-    //WebClient
-    public ResponseMessage WebSendFilesAndMessage(List<String> filePaths, String message) {
+    //모델학습 (사진4개 String 으로 반환)
+    public List<String> sendFilesAndRetrieveImages(List<MultipartFile> files, String cname, String search_text) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("message", message);
+        body.add("cname", cname);
+        body.add("search_text", search_text);
 
-        for (int i = 0; i < filePaths.size(); i++) {
-            body.add("file" + i, new FileSystemResource(filePaths.get(i)));
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            body.add("file" + i, new ByteArrayResource(file.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return file.getOriginalFilename();
+                }
+            });
         }
 
         return webClient.post()
@@ -41,15 +50,8 @@ public class WebtoonAiService {
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(body))
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse -> {
-                    // 4xx 에러 처리
-                    return Mono.error(new RuntimeException("Client Error!"));
-                })
-                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
-                    // 5xx 에러 처리
-                    return Mono.error(new RuntimeException("Server Error!"));
-                })
-                .bodyToMono(ResponseMessage.class)
+                .bodyToFlux(String.class) // Base64 인코딩된 문자열을 직접 받음
+                .collectList()
                 .block();
     }
 }

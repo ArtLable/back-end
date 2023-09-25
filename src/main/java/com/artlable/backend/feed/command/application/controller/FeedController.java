@@ -6,7 +6,7 @@ import com.artlable.backend.feed.command.application.dto.read.FeedReadResponseDT
 
 import com.artlable.backend.feed.command.application.dto.update.FeedUpdateRequestDTO;
 import com.artlable.backend.feed.command.application.service.FeedService;
-import com.artlable.backend.files.command.application.dto.CreateFeedFileRequestDTO;
+import com.artlable.backend.files.command.application.dto.feed.CreateFeedFileRequestDTO;
 import com.artlable.backend.files.command.application.service.FileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@Api(tags= "FEED CRUD API")
+@Api(tags= "FEED API")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -68,11 +68,11 @@ public class FeedController {
             @ApiImplicitParam(name = "files", value = "Files", dataType = "file", paramType = "form", allowMultiple = true) })
     @PostMapping(value = "/feeds", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createFeed(
-            @RequestPart(value = "feed") String feedJson,
+            @RequestBody FeedCreateRequestDTO requestDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             @RequestHeader("Authorization") String accessToken) {
+
         try {
-            FeedCreateRequestDTO requestDTO = objectMapper.readValue(feedJson, FeedCreateRequestDTO.class);
             Long feedNo = feedService.createFeed(requestDTO, accessToken);
             List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feedSaveFile(files, feedNo, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
@@ -84,11 +84,14 @@ public class FeedController {
         }
     }
 
+
+
+
     @ApiOperation(value = "피드 수정")
     @PutMapping("/feeds/{feedNo}")
     public ResponseEntity<ResponseMessage> modifyInfo(@PathVariable Long feedNo,
-                                        @RequestBody FeedUpdateRequestDTO requestDTO,
-                                        @RequestHeader("Authorization") String accessToken) {
+                                                      @RequestBody FeedUpdateRequestDTO requestDTO,
+                                                      @RequestHeader("Authorization") String accessToken) {
 
         try {
             Long resultFeedNo = feedService.updateFeed(feedNo,requestDTO, accessToken);
@@ -103,7 +106,7 @@ public class FeedController {
     @ApiOperation(value = "피드 삭제")
     @DeleteMapping("/feeds/{feedNo}")
     public ResponseEntity<ResponseMessage> removeFeed(@PathVariable Long feedNo,
-                                        @RequestHeader("Authorization") String accessToken) {
+                                                      @RequestHeader("Authorization") String accessToken) {
 
         try {
             Long resultFeedNo = feedService.deleteFeed(feedNo, accessToken);
@@ -114,5 +117,4 @@ public class FeedController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
         }
     }
-
 }

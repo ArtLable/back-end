@@ -9,13 +9,15 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LearningUpdate {
+public class LearningUpdateDTO {
 
-    private String learningContent;
+    private String cname;
+    private String searchText;
     private List<FileRequestDTO> filesList;
 
-    public LearningUpdate(String learningContent, List<FileRequestDTO> filesList) {
-        this.learningContent = learningContent;
+    public LearningUpdateDTO(String cname, String searchText, List<FileRequestDTO> filesList) {
+        this.cname = cname;
+        this.searchText = searchText;
         this.filesList = filesList;
     }
 }

@@ -1,9 +1,9 @@
 package com.artlable.backend.webtoon.command.application.controller;
 
 import com.artlable.backend.common.ResponseMessage;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreate;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceRead;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdate;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreateDTO;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceReadDTO;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdateDTO;
 import com.artlable.backend.webtoon.command.application.service.InferenceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(tags= "INFERENCE API")
+@Api(tags= "WEBTOON INFERENCE API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/webtoons")
 @RequiredArgsConstructor
 public class InferenceController {
 
@@ -30,7 +30,7 @@ public class InferenceController {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            List<InferenceRead> inferences = inferenceService.findAllInfereces();
+            List<InferenceReadDTO> inferences = inferenceService.findAllInfereces();
             responseMap.put("inferences", inferences);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "전체 추론 조회 성공!", responseMap));
@@ -45,7 +45,7 @@ public class InferenceController {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            InferenceRead inferenceRead = inferenceService.findInference(inferenceNo);
+            InferenceReadDTO inferenceRead = inferenceService.findInference(inferenceNo);
             responseMap.put("inferences", inferenceRead);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "단일 추론 조회 성공",responseMap));
@@ -56,7 +56,7 @@ public class InferenceController {
 
     @ApiOperation(value = "추론 작성")
     @PostMapping("/inferences")
-    public ResponseEntity<?> createNovel(@RequestBody InferenceCreate inferenceCreate,
+    public ResponseEntity<?> createNovel(@RequestBody InferenceCreateDTO inferenceCreate,
                                          @RequestHeader("Authorization") String accessToken) {
 
         try {
@@ -73,7 +73,7 @@ public class InferenceController {
     @ApiOperation(value = "추론 수정")
     @PutMapping("/inferences/{inferenceNo}")
     public ResponseEntity<?> modifyInfo(@PathVariable Long inferenceNo,
-                                        @RequestBody InferenceUpdate inferenceUpdate,
+                                        @RequestBody InferenceUpdateDTO inferenceUpdate,
                                         @RequestHeader("Authorization") String accessToken) {
 
         try {

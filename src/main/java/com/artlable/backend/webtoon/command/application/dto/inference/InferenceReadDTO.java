@@ -10,20 +10,20 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class InferenceRead {
+public class InferenceReadDTO {
 
     private Long inferenceNo;
     private String inferenceContent;
     private String inferenceResult;
     private List<Long> fileNo;
 
-    public InferenceRead(Inference inference) {
+    public InferenceReadDTO(Inference inference) {
         this.inferenceNo = inference.getInferenceNo();
         this.inferenceContent = inference.getInferenceContent();
         this.inferenceResult = inference.getInferenceResult();
     }
     @Builder
-    public InferenceRead(Long inferenceNo, String inferenceContent, String inferenceResult, List<Long> fileNo) {
+    public InferenceReadDTO(Long inferenceNo, String inferenceContent, String inferenceResult, List<Long> fileNo) {
         this.inferenceNo = inferenceNo;
         this.inferenceContent = inferenceContent;
         this.inferenceResult = inferenceResult;

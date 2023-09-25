@@ -50,21 +50,11 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //단순 접근
                 .antMatchers("/api/v1/authentication/**").permitAll() //로그인
-                .antMatchers("/api/v1/members/**").permitAll() //회원가입
-                .antMatchers("/api/v1/feeds/**").permitAll() //피드 조회
-                .antMatchers("/api/v1/feeds/{feedNo}**").permitAll() //피드 번호로 조회
-                .antMatchers("/api/v1/files/**").permitAll() //파일 업로드
-                .antMatchers("/api/v1/files/{fileNo}**").permitAll() //파일 다운로드
-                .antMatchers("/api/v1/novels/**").permitAll() // 소설 조회
-                .antMatchers("/api/v1/novels/{novelNo}**").permitAll() // 소설 번호로 조회
-                .antMatchers("/api/v1/characters/**").permitAll() // 캐릭터 조회
-                .antMatchers("/api/v1/characters/{characterNo}**").permitAll() // 캐릭터 번호로 조회
-                .antMatchers("/api/v1/summaries/**").permitAll() // 요약 조회
-                .antMatchers("/api/v1/summaries/{summaryNo}**").permitAll() // 요약 번호로 조회
-                .antMatchers("/api/v1/inferences/**").permitAll() // 생성 조회
-                .antMatchers("/api/v1/inferences/{inferenceNo}**").permitAll() // 생성 번호로 조회
-                .antMatchers("/api/v1/learnings/**").permitAll() // 학습 조회
-                .antMatchers("/api/v1/learnings/{learningNo}**").permitAll() // 학습 번호로 조회
+                .antMatchers("/api/v1/members/**").permitAll() //회원
+                .antMatchers("/api/v1/feeds/**").permitAll() //피드
+                .antMatchers("/api/v1/files/**").permitAll() //파일
+                .antMatchers("/api/v1/novels/**").permitAll() // 소설
+                .antMatchers("/api/v1/webtoons/**").permitAll() // 소설
                 .antMatchers( //swagger
                         "/swagger-ui/**",
                         "/v2/api-docs",

@@ -1,4 +1,4 @@
-package com.artlable.backend.files.command.application.dto;
+package com.artlable.backend.files.command.application.dto.feed;
 
 import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import lombok.*;
