@@ -1,7 +1,7 @@
 package com.artlable.backend.novel.command.application.dto.novel;
 
 import com.artlable.backend.files.command.application.dto.ReadFeedFileResponseDTO;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacter;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacterDTO;
 import com.artlable.backend.novel.command.application.dto.novelsummary.NovelReadSummary;
 import com.artlable.backend.novel.command.domain.aggregate.entity.Novel;
 import lombok.AccessLevel;
@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NovelRead {
+public class NovelReadDTO {
 
     private Long novelNo;
     private String novelTitle;
     private String novelContent;
     private String novelGenre;
 //    private List<NovelReadResult> resultList;
-    private List<NovelReadCharacter> characters;
+    private List<NovelReadCharacterDTO> characters;
     private List<NovelReadSummary> summaries;
     private List<ReadFeedFileResponseDTO> files;
 
-    public NovelRead(Novel novel) {
+    public NovelReadDTO(Novel novel) {
         this.novelNo = novel.getNovelNo();
         this.novelTitle = novel.getNovelTitle();
         this.novelContent = novel.getNovelContent();
@@ -34,7 +34,7 @@ public class NovelRead {
 //                .map(NovelReadResult::fromEntity)
 //                .collect(Collectors.toList());
         this.characters = novel.getCharacters().stream()
-                .map(NovelReadCharacter::fromEntity)
+                .map(NovelReadCharacterDTO::fromEntity)
                 .collect(Collectors.toList());
         this.summaries = novel.getSummaries().stream()
                 .map(NovelReadSummary::fromEntity)
@@ -44,7 +44,7 @@ public class NovelRead {
                 .collect(Collectors.toList());
     }
     @Builder
-    public NovelRead(Long novelNo, String novelTitle, String novelContent, String novelGenre, List<NovelReadCharacter> characters, List<NovelReadSummary> summaries, List<ReadFeedFileResponseDTO> files) {
+    public NovelReadDTO(Long novelNo, String novelTitle, String novelContent, String novelGenre, List<NovelReadCharacterDTO> characters, List<NovelReadSummary> summaries, List<ReadFeedFileResponseDTO> files) {
         this.novelNo = novelNo;
         this.novelTitle = novelTitle;
         this.novelContent = novelContent;

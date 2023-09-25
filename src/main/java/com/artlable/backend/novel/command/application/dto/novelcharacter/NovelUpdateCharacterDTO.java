@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NovelUpdateCharacter {
+public class NovelUpdateCharacterDTO {
 
     private String characterName;
     private String characterGender;
@@ -17,7 +17,7 @@ public class NovelUpdateCharacter {
     private String characterPersonality;
     private List<FileRequestDTO> filesList;
 
-    public NovelUpdateCharacter(String characterName, String characterGender, String characterAppearance, String characterPersonality, List<FileRequestDTO> filesList) {
+    public NovelUpdateCharacterDTO(String characterName, String characterGender, String characterAppearance, String characterPersonality, List<FileRequestDTO> filesList) {
         this.characterName = characterName;
         this.characterGender = characterGender;
         this.characterAppearance = characterAppearance;

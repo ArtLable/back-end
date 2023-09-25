@@ -3,10 +3,9 @@ package com.artlable.backend.novel.command.application.controller;
 import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.files.command.application.dto.CreateFeedFileRequestDTO;
 import com.artlable.backend.files.command.application.service.FileService;
-import com.artlable.backend.novel.command.application.dto.novel.NovelCreate;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelCreateCharacter;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacter;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelUpdateCharacter;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelCreateCharacterDTO;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacterDTO;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelUpdateCharacterDTO;
 import com.artlable.backend.novel.command.domain.service.NovelCharacterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -40,7 +39,7 @@ public class NovelCharacterController {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            List<NovelReadCharacter> characters = novelCharacterService.findAllNovelCharacters();
+            List<NovelReadCharacterDTO> characters = novelCharacterService.findAllNovelCharacters();
             responseMap.put("characters", characters);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "전체 캐릭터 조회 성공!", responseMap));
@@ -55,7 +54,7 @@ public class NovelCharacterController {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
-            NovelReadCharacter readCharacter = novelCharacterService.findCharacter(characterNo);
+            NovelReadCharacterDTO readCharacter = novelCharacterService.findCharacter(characterNo);
             responseMap.put("characters", readCharacter);
 
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "단일 캐릭터 조회 성공",responseMap));
@@ -77,7 +76,7 @@ public class NovelCharacterController {
             @RequestHeader("Authorization") String accessToken) {
 
         try {
-            NovelCreateCharacter createCharacter = objectMapper.readValue(novelCharacterJson, NovelCreateCharacter.class);
+            NovelCreateCharacterDTO createCharacter = objectMapper.readValue(novelCharacterJson, NovelCreateCharacterDTO.class);
             Long characterNo = novelCharacterService.createCharacter(createCharacter, accessToken);
             List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feedSaveFile(files, characterNo, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
@@ -93,7 +92,7 @@ public class NovelCharacterController {
     @ApiOperation(value = "캐릭터 수정")
     @PutMapping("/characters/{characterNo}")
     public ResponseEntity<?> modifyInfo(@PathVariable Long characterNo,
-                                        @RequestBody NovelUpdateCharacter updateCharacter,
+                                        @RequestBody NovelUpdateCharacterDTO updateCharacter,
                                         @RequestHeader("Authorization") String accessToken) {
 
         try {

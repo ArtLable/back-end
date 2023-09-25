@@ -90,7 +90,7 @@ public class FileService {
     }
 
     @Transactional
-    public List<CreateFeedFileRequestDTO> feddSaveFile(List<MultipartFile> files, Long feedNo, String accessToken) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+    public List<CreateFeedFileRequestDTO> feedSaveFile(List<MultipartFile> files, Long feedNo, String accessToken) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
         if (!tokenProvider.validateToken(accessToken)) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
@@ -111,7 +111,10 @@ public class FileService {
 
         //저장위치변수
         String uploadRoot = Paths.get(System.getProperty("user.home"))
-                .resolve("upload").toString();
+                .resolve("toon-maker")
+                .resolve("toon-maker-frontend")
+                .resolve("imgdown")
+                .toString();
 
         //디렉토리생성
         File directory = new File(uploadRoot);
