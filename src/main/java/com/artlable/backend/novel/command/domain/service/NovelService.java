@@ -28,7 +28,7 @@ public class NovelService {
     @Transactional(readOnly = true)
     public List<NovelRead> findAllNovels() {
 
-        List<Novel> novels = novelRepository.findByNovelIsDeletedFalseOrderByNovelNoDesc();
+        List<Novel> novels = novelRepository.findAll();
         List<NovelRead> novelList = new ArrayList<>();
 
         for (Novel novel : novels) {

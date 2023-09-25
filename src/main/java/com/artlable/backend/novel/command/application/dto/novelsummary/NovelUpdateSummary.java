@@ -12,12 +12,10 @@ import java.util.List;
 public class NovelUpdateSummary {
 
     private String summaryContent;
-    private String summaryResult;
     private List<FileRequestDTO> filesList;
 
-    public NovelUpdateSummary(String summaryContent, String summaryResult, List<FileRequestDTO> filesList) {
+    public NovelUpdateSummary(String summaryContent, List<FileRequestDTO> filesList) {
         this.summaryContent = summaryContent;
-        this.summaryResult = summaryResult;
         this.filesList = filesList;
     }
 }

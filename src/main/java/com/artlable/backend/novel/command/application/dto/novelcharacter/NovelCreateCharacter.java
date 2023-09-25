@@ -17,18 +17,13 @@ public class NovelCreateCharacter {
     private String characterGender;
     private String characterAppearance;
     private String characterPersonality;
-    private String characterResult;
-    private List<Files> files;
 
     @Builder
-    public NovelCreateCharacter(String characterName, String characterGender, String characterAppearance, String characterPersonality,
-                                String characterResult, List<Files> files) {
+    public NovelCreateCharacter(String characterName, String characterGender, String characterAppearance, String characterPersonality) {
         this.characterName = characterName;
         this.characterGender = characterGender;
         this.characterAppearance = characterAppearance;
         this.characterPersonality = characterPersonality;
-        this.characterResult = characterResult;
-        this.files = files;
     }
 
     public NovelCharacter toEntity() {
@@ -37,8 +32,6 @@ public class NovelCreateCharacter {
                 .characterGender(characterGender)
                 .characterAppearance(characterAppearance)
                 .characterPersonality(characterPersonality)
-                .characterResult(characterResult)
-                .files(files)
                 .build();
     }
 }

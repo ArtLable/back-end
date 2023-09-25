@@ -15,20 +15,17 @@ import java.util.List;
 public class NovelCreateSummary {
 
     private String summaryContent;
-    private String summaryResult;
-    private List<Files> files;
+//    private List<Files> files;
 
     @Builder
-    public NovelCreateSummary(String summaryContent, String summaryResult, List<Files> files) {
+    public NovelCreateSummary(String summaryContent, List<Files> files) {
         this.summaryContent = summaryContent;
-        this.summaryResult = summaryResult;
-        this.files = files;
+//        this.files = files;
     }
 
     public NovelSummary toEntity() {
         return NovelSummary.builder()
                 .summaryContent(summaryContent)
-                .summaryResult(summaryResult)
                 .build();
     }
 }
