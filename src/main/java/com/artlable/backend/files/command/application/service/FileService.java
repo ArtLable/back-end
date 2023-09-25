@@ -46,7 +46,8 @@ public class FileService {
         String uploadRoot = Paths.get(System.getProperty("user.home"))
                 .resolve("toon-maker")
                 .resolve("toon-maker-frontend")
-                .resolve("imgdown")
+                .resolve("img")
+                .resolve("upload")
                 .toString();
 
         //디렉토리생성
@@ -117,7 +118,8 @@ public class FileService {
         String uploadRoot = Paths.get(System.getProperty("user.home"))
                 .resolve("toon-maker")
                 .resolve("toon-maker-frontend")
-                .resolve("imgdown")
+                .resolve("img")
+                .resolve("upload")
                 .toString();
 
         //디렉토리생성
@@ -178,7 +180,11 @@ public class FileService {
         try {
             // 파일 경로 생성
             String uploadRoot = Paths.get(System.getProperty("user.home"))
-                    .resolve("upload").toString();
+                    .resolve("toon-maker")
+                    .resolve("toon-maker-frontend")
+                    .resolve("img")
+                    .resolve("upload")
+                    .toString();
             Path filePath = Paths.get(uploadRoot).resolve(files.getFileName()).normalize();
 
             // 파일 리소스 생성
@@ -206,7 +212,11 @@ public class FileService {
                 .orElseThrow(() -> new FileNotFoundException("파일을 조회할 수 없습니다. " + fileNo));
 
         String uploadRoot = Paths.get(System.getProperty("user.home"))
-                .resolve("upload").toString();
+                .resolve("toon-maker")
+                .resolve("toon-maker-frontend")
+                .resolve("img")
+                .resolve("upload")
+                .toString();
         Path filePath = Paths.get(uploadRoot).resolve(files.getFileName()).normalize();
 
         // 이미지 파일의 URL을 반환
