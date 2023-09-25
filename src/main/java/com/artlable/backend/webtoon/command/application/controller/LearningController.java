@@ -9,9 +9,12 @@ import com.artlable.backend.webtoon.command.application.dto.learning.LearningRea
 import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdateDTO;
 import com.artlable.backend.webtoon.command.application.service.LearningService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,9 +63,9 @@ public class LearningController {
         }
     }
 
-    @ApiOperation(value = "학습 작성")
-    @PostMapping(value = "/learnings", consumes = "multipart/form-data")
-    public ResponseEntity<ResponseMessage> createNovel(
+    @ApiOperation(value = "학습 생성")
+    @PostMapping(value = "/learnings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseMessage> createWebtoonLearning(
             @RequestBody LearningCreateDTO requestDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
             @RequestHeader("Authorization") String accessToken) {

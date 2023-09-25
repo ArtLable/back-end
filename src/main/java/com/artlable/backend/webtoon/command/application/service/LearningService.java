@@ -87,6 +87,7 @@ public class LearningService {
     }
 
     //api 호출
+    @Transactional
     public void callExternalServiceAndSaveResult(Long learningNo, List<MultipartFile> files, String cname, String search_text, String accessToken) throws IOException, NoSuchAlgorithmException {
         // 외부 서비스 호출
         List<String> resultImages = learningWebtoonService.sendFilesAndRetrieveImages(files, cname, search_text);
