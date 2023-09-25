@@ -15,11 +15,11 @@ import java.util.List;
 public class FeedUpdateRequestDTO {
 
     private String feedContent;
-    private List<FileRequestDTO> filesList;
+
 
     @Builder
-    public FeedUpdateRequestDTO(String feedContent, List<FileRequestDTO> filesList) {
+    public FeedUpdateRequestDTO(String feedContent) {
         this.feedContent = feedContent;
-        this.filesList = filesList;
+
     }
 }
