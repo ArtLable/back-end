@@ -44,7 +44,11 @@ public class FileService {
         List<FileRequestDTO> multiFilesWriteDTOList = new ArrayList<>();
         //저장위치변수
         String uploadRoot = Paths.get(System.getProperty("user.home"))
-                .resolve("upload").toString();
+                .resolve("toon-maker")
+                .resolve("toon-maker-frontend")
+                .resolve("imgdown")
+                .toString();
+
         //디렉토리생성
         File directory = new File(uploadRoot);
         //디렉토리 없을경우 오류처리
