@@ -40,12 +40,14 @@ public class NovelSummary extends AuditingFields {
     private Member member;
 
     @Builder
-    public NovelSummary(Long summaryNo, String summaryContent, String summaryResult, Boolean summaryIsDeleted, List<Files> files, Member member) {
+    public NovelSummary(Long summaryNo, String summaryContent, String summaryResult, Boolean summaryIsDeleted, List<Files> files,
+                        Novel novel, Member member) {
         this.summaryNo = summaryNo;
         this.summaryContent = summaryContent;
         this.summaryResult = summaryResult;
         this.summaryIsDeleted = summaryIsDeleted;
         this.files = files;
+        this.novel = novel;
         this.member = member;
     }
 

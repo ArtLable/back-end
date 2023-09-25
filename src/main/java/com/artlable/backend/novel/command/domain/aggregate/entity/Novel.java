@@ -34,9 +34,9 @@ public class Novel extends AuditingFields {
     @JoinColumn
     private Member member;
 
-//    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
-//    @OrderBy("resultNo asc")
-//    private List<NovelResult> resultList;
+    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
+    @OrderBy("resultNo asc")
+    private List<NovelResult> resultList;
 
     @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
     @OrderBy("characterNo asc")

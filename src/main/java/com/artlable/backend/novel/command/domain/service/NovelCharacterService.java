@@ -3,9 +3,9 @@ package com.artlable.backend.novel.command.domain.service;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelCreateCharacter;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacter;
-import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelUpdateCharacter;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelCreateCharacterDTO;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacterDTO;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelUpdateCharacterDTO;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelCharacter;
 import com.artlable.backend.novel.command.domain.repository.NovelCharacterRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class NovelCharacterService {
 
     // 전체 캐릭터 조회
     @Transactional(readOnly = true)
-    public List<NovelReadCharacter> findAllNovelCharacters() {
+    public List<NovelReadCharacterDTO> findAllNovelCharacters() {
 
         List<NovelCharacter> characters = novelCharacterRepository.findAll();
-        List<NovelReadCharacter> characterList = new ArrayList<>();
+        List<NovelReadCharacterDTO> characterList = new ArrayList<>();
 
         for (NovelCharacter novelCharacter : characters) {
-            NovelReadCharacter novelReadCharacter = new NovelReadCharacter(novelCharacter);
+            NovelReadCharacterDTO novelReadCharacter = new NovelReadCharacterDTO(novelCharacter);
             characterList.add(novelReadCharacter);
         }
 
@@ -41,17 +41,17 @@ public class NovelCharacterService {
 
     // 특정 캐릭터 조회
     @Transactional(readOnly = true)
-    public NovelReadCharacter findCharacter(Long characterNo) {
+    public NovelReadCharacterDTO findCharacter(Long characterNo) {
 
         NovelCharacter novelCharacter = novelCharacterRepository.findByCharacterNo(characterNo);
-        NovelReadCharacter readCharacter = new NovelReadCharacter(novelCharacter);
+        NovelReadCharacterDTO readCharacter = new NovelReadCharacterDTO(novelCharacter);
 
         return readCharacter;
     }
 
     // 캐릭터 생성
     @Transactional
-    public Long createCharacter(NovelCreateCharacter novelCreateCharacter, String accessToken) {
+    public Long createCharacter(NovelCreateCharacterDTO novelCreateCharacter, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -74,7 +74,7 @@ public class NovelCharacterService {
 
     // 소설에 캐릭터 추가
     @Transactional
-    public Long novelCreateCharacter(NovelCreateCharacter novelCreateCharacter, String accessToken) {
+    public Long novelCreateCharacter(NovelCreateCharacterDTO novelCreateCharacter, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -97,7 +97,7 @@ public class NovelCharacterService {
 
     // 소설 수정
     @Transactional
-    public Long updateCharacter(Long characterNo, NovelUpdateCharacter updateCharacter, String accessToken) {
+    public Long updateCharacter(Long characterNo, NovelUpdateCharacterDTO updateCharacter, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {

@@ -3,9 +3,9 @@ package com.artlable.backend.novel.command.domain.service;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
-import com.artlable.backend.novel.command.application.dto.novel.NovelCreate;
-import com.artlable.backend.novel.command.application.dto.novel.NovelRead;
-import com.artlable.backend.novel.command.application.dto.novel.NovelUpdate;
+import com.artlable.backend.novel.command.application.dto.novel.NovelCreateDTO;
+import com.artlable.backend.novel.command.application.dto.novel.NovelReadDTO;
+import com.artlable.backend.novel.command.application.dto.novel.NovelUpdateDTO;
 import com.artlable.backend.novel.command.domain.aggregate.entity.Novel;
 import com.artlable.backend.novel.command.domain.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class NovelService {
 
     // 전제 소설 조회
     @Transactional(readOnly = true)
-    public List<NovelRead> findAllNovels() {
+    public List<NovelReadDTO> findAllNovels() {
 
         List<Novel> novels = novelRepository.findAll();
-        List<NovelRead> novelList = new ArrayList<>();
+        List<NovelReadDTO> novelList = new ArrayList<>();
 
         for (Novel novel : novels) {
-            NovelRead novelRead = new NovelRead(novel);
+            NovelReadDTO novelRead = new NovelReadDTO(novel);
             novelList.add(novelRead);
         }
 
@@ -41,17 +41,17 @@ public class NovelService {
 
     // 특정 소설 조회
     @Transactional(readOnly = true)
-    public NovelRead findNovel(Long novelNo) {
+    public NovelReadDTO findNovel(Long novelNo) {
 
         Novel novel = novelRepository.findByNovelNo(novelNo);
-        NovelRead novelRead = new NovelRead(novel);
+        NovelReadDTO novelRead = new NovelReadDTO(novel);
 
         return novelRead;
     }
 
     // 소설 생성
     @Transactional
-    public Long createNovel(NovelCreate novelCreate, String accessToken) {
+    public Long createNovel(NovelCreateDTO novelCreate, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -74,7 +74,7 @@ public class NovelService {
 
     // 소설 수정
     @Transactional
-    public Long updateNovel(Long novelNo, NovelUpdate novelUpdate, String accessToken) {
+    public Long updateNovel(Long novelNo, NovelUpdateDTO novelUpdate, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {

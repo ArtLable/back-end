@@ -74,7 +74,7 @@ public class FeedController {
         try {
             FeedCreateRequestDTO requestDTO = objectMapper.readValue(feedJson, FeedCreateRequestDTO.class);
             Long feedNo = feedService.createFeed(requestDTO, accessToken);
-            List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feddSaveFile(files, feedNo, accessToken);
+            List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feedSaveFile(files, feedNo, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("feedNo", feedNo);
             responseMap.put("uploadedFiles", uploadedFiles);
