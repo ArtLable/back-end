@@ -12,6 +12,7 @@ import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpd
 import com.artlable.backend.webtoon.command.domain.aggregate.entity.Inference;
 import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
 import com.artlable.backend.webtoon.command.domain.repository.LearningRepository;
+import com.artlable.backend.webtoon.command.infra.service.WebtoonAiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class LearningService {
 
     private final LearningRepository learningRepository;
     private final MemberRepository memberRepository;
+    private final WebtoonAiService webtoonAiService;
     private final TokenProvider tokenProvider;
 
     // 전제 학습 조회
