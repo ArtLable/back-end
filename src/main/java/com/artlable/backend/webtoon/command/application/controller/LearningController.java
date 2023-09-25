@@ -66,15 +66,14 @@ public class LearningController {
     @ApiOperation(value = "학습 생성")
     @PostMapping(value = "/learnings", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createWebtoonLearning(
-            @RequestBody LearningCreateDTO requestDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @ModelAttribute LearningCreateDTO requestDTO,
             @RequestHeader("Authorization") String accessToken) {
 
         try {
             Long learningNo = learningService.createLearning(requestDTO, accessToken);
-            List<CreateWebtoonLerningFileRequestDTO> fileRequestDTO = fileService.WebtoonLearningSaveFile(files, learningNo, accessToken);
+            List<CreateWebtoonLerningFileRequestDTO> fileRequestDTO = fileService.WebtoonLearningSaveFile(requestDTO.getFiles(), learningNo, accessToken);
 
-            learningService.callExternalServiceAndSaveResult(learningNo, files, requestDTO.getCname(), requestDTO.getSearchText(),accessToken);
+            learningService.callExternalServiceAndSaveResult(learningNo, requestDTO.getFiles(), requestDTO.getCname(), requestDTO.getSearchText(), accessToken);
 
             Map<String, Object> responseMap = new HashMap<>();
 

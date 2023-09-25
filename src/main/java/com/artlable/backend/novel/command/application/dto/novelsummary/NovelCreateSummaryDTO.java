@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,12 +16,12 @@ import java.util.List;
 public class NovelCreateSummaryDTO {
 
     private String summaryContent;
-//    private List<Files> files;
+    private List<MultipartFile> files;
 
     @Builder
-    public NovelCreateSummaryDTO(String summaryContent, List<Files> files) {
+    public NovelCreateSummaryDTO(String summaryContent, List<MultipartFile> files) {
         this.summaryContent = summaryContent;
-//        this.files = files;
+        this.files = files;
     }
 
     public NovelSummary toEntity() {

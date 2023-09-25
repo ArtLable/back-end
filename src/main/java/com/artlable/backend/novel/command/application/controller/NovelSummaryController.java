@@ -63,19 +63,14 @@ public class NovelSummaryController {
     }
 
     @ApiOperation(value = "요약 생성")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "novelSummary", value = "NovelSummary JSON", readOnly = true, dataType = "string", paramType = "form"),
-            @ApiImplicitParam(name = "files", value = "Files", dataType = "file", paramType = "form", allowMultiple = true)
-    })
     @PostMapping(value = "/summaries", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createSummary(
             @RequestBody NovelCreateSummaryDTO requestDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files,
             @RequestHeader("Authorization") String accessToken) {
 
         try {
             Long summaryNo = novelSummaryService.createSummary(requestDTO, accessToken);
-            List<CreateNovelSummaryFileRequestDTO> fileRequestDTO = fileService.NovelSummarySaveFile(files, summaryNo, accessToken);
+            List<CreateNovelSummaryFileRequestDTO> fileRequestDTO = fileService.NovelSummarySaveFile(requestDTO.getFiles(), summaryNo, accessToken);
 
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("summaryNo",summaryNo);

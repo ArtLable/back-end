@@ -30,7 +30,7 @@ public class NovelCharacterController {
 
     @ApiOperation(value = "전체 캐릭터 조회")
     @GetMapping("/characters")
-    public ResponseEntity<?> findAllCharacters() {
+    public ResponseEntity<ResponseMessage> findAllCharacters() {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();
@@ -45,7 +45,7 @@ public class NovelCharacterController {
 
     @ApiOperation(value = "캐릭터 번호로 조회")
     @GetMapping("/characters/{characterNo}")
-    public ResponseEntity<?> findCharactersById(@PathVariable Long characterNo) {
+    public ResponseEntity<ResponseMessage> findCharactersById(@PathVariable Long characterNo) {
 
         try {
             Map<String, Object> responseMap = new HashMap<>();

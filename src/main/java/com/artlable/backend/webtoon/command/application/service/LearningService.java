@@ -65,7 +65,7 @@ public class LearningService {
 
     // 학습 생성
     @Transactional
-    public Long createLearning(LearningCreateDTO learningCreate, String accessToken) {
+    public Long createLearning(LearningCreateDTO createDTO, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -78,7 +78,7 @@ public class LearningService {
         Member member = memberRepository.findMemberByMemberEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        Learning learning = learningCreate.toEntity();
+        Learning learning = createDTO.toEntity();
         learning.setMember(member);
 
         learningRepository.save(learning);

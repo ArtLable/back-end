@@ -68,13 +68,12 @@ public class FeedController {
             @ApiImplicitParam(name = "files", value = "Files", dataType = "file", paramType = "form", allowMultiple = true) })
     @PostMapping(value = "/feeds", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createFeed(
-            @RequestBody FeedCreateRequestDTO requestDTO,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @ModelAttribute FeedCreateRequestDTO requestDTO,
             @RequestHeader("Authorization") String accessToken) {
 
         try {
             Long feedNo = feedService.createFeed(requestDTO, accessToken);
-            List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feedSaveFile(files, feedNo, accessToken);
+            List<CreateFeedFileRequestDTO> uploadedFiles = fileService.feedSaveFile(requestDTO.getFiles(), feedNo, accessToken);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("feedNo", feedNo);
             responseMap.put("uploadedFiles", uploadedFiles);
