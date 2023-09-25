@@ -27,9 +27,13 @@ public class NovelSummary extends AuditingFields {
     @Column
     private Boolean summaryIsDeleted;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "novelSummary",cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
     private List<Files> files;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "novel_no")
+    private Novel novel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")

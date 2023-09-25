@@ -30,22 +30,38 @@ public class Novel extends AuditingFields {
     @Column
     private Boolean novelIsDeleted;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+//    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
+//    @OrderBy("resultNo asc")
+//    private List<NovelResult> resultList;
+
+    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
+    @OrderBy("characterNo asc")
+    private List<NovelCharacter> characters;
+
+    @OneToMany(mappedBy = "novel", cascade = CascadeType.REMOVE)
+    @OrderBy("summaryNo asc")
+    private List<NovelSummary> summaries;
+
+    @OneToMany(mappedBy = "novel",cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
     private List<Files> files;
 
     @Builder
-    public Novel(Long novelNo, String novelContent, String novelTitle, String novelGenre, Boolean novelIsDeleted, Member member, List<Files> files) {
+    public Novel(Long novelNo, String novelContent, String novelTitle, String novelGenre, Boolean novelIsDeleted,
+                 Member member, List<NovelCharacter> characters, List<NovelSummary> summaries, List<Files> files) {
         this.novelNo = novelNo;
         this.novelContent = novelContent;
         this.novelTitle = novelTitle;
         this.novelGenre = novelGenre;
         this.novelIsDeleted = novelIsDeleted;
         this.member = member;
+//        this.resultList = resultList;
+        this.characters = characters;
+        this.summaries = summaries;
         this.files = files;
     }
 
@@ -72,6 +88,18 @@ public class Novel extends AuditingFields {
     public void setMember(Member member) {
         this.member = member;
     }
+
+    public void setCharacterList(List<NovelCharacter> characters) {
+        this.characters = characters;
+    }
+
+    public void setSummaryList(List<NovelSummary> summaries) {
+        this.summaries = summaries;
+    }
+
+//    public void setResultList(List<NovelResult> resultList) {
+//        this.resultList = resultList;
+//    }
 
     public void setFiles(List<Files> files) {
         this.files = files;

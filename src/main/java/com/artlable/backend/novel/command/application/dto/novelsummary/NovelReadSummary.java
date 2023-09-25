@@ -1,5 +1,6 @@
 package com.artlable.backend.novel.command.application.dto.novelsummary;
 
+import com.artlable.backend.files.command.application.dto.ReadFeedFileResponseDTO;
 import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
 import lombok.AccessLevel;
@@ -16,22 +17,27 @@ public class NovelReadSummary {
 
     private Long summaryNo;
     private String summaryContent;
-    private String summaryResult;
-    private List<Long> fileNo;
+    private List<ReadFeedFileResponseDTO> files;
 
     public NovelReadSummary(NovelSummary novelSummary) {
         this.summaryNo = novelSummary.getSummaryNo();
         this.summaryContent = novelSummary.getSummaryContent();
-        this.summaryResult = novelSummary.getSummaryResult();
-        this.fileNo = novelSummary.getFiles().stream().map(Files::getFileNo)
+        this.files = novelSummary.getFiles().stream()
+                .map(ReadFeedFileResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Builder
-    public NovelReadSummary(Long summaryNo, String summaryContent, String summaryResult, List<Long> fileNo) {
+    public NovelReadSummary(Long summaryNo, String summaryContent, List<ReadFeedFileResponseDTO> files) {
         this.summaryNo = summaryNo;
         this.summaryContent = summaryContent;
-        this.summaryResult = summaryResult;
-        this.fileNo = fileNo;
+        this.files = files;
+    }
+
+    public static NovelReadSummary fromEntity(NovelSummary novelSummary) {
+        return NovelReadSummary.builder()
+                .summaryNo(novelSummary.getSummaryNo())
+                .summaryContent(novelSummary.getSummaryContent())
+                .build();
     }
 }

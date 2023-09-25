@@ -31,14 +31,15 @@ public class NovelCharacter extends AuditingFields {
     private String characterPersonality;
 
     @Column
-    private String characterResult;
-
-    @Column
     private Boolean characterIsDeleted;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "novelCharacter",cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
     private List<Files> files;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "novel_no")
+    private Novel novel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
@@ -46,14 +47,14 @@ public class NovelCharacter extends AuditingFields {
 
     @Builder
     public NovelCharacter(Long characterNo, String characterName, String characterGender, String characterAppearance,
-                          String characterPersonality, String characterResult, Boolean characterIsDeleted, List<Files> files, Member member) {
+                          String characterPersonality, Boolean characterIsDeleted, Novel novel, List<Files> files, Member member) {
         this.characterNo = characterNo;
         this.characterName = characterName;
         this.characterGender = characterGender;
         this.characterAppearance = characterAppearance;
         this.characterPersonality = characterPersonality;
-        this.characterResult = characterResult;
         this.characterIsDeleted = characterIsDeleted;
+        this.novel = novel;
         this.files = files;
         this.member = member;
     }
@@ -76,10 +77,6 @@ public class NovelCharacter extends AuditingFields {
 
     public void setCharacterPersonality(String characterPersonality) {
         this.characterPersonality = characterPersonality;
-    }
-
-    public void setCharacterResult(String characterResult) {
-        this.characterResult = characterResult;
     }
 
     public void setCharacterIsDeleted(Boolean characterIsDeleted) {

@@ -28,7 +28,7 @@ public class NovelSummaryService {
     @Transactional(readOnly = true)
     public List<NovelReadSummary> findNovelAllSummaries() {
 
-        List<NovelSummary> summaries = novelSummaryRepository.findBySummaryIsDeletedFalseOrderBySummaryNoDesc();
+        List<NovelSummary> summaries = novelSummaryRepository.findAll();
         List<NovelReadSummary> summaryList = new ArrayList<>();
 
         for (NovelSummary novelSummary : summaries) {
@@ -94,7 +94,6 @@ public class NovelSummaryService {
         }
 
         novelSummary.setSummaryContent(updateSummary.getSummaryContent());
-        novelSummary.setSummaryResult(updateSummary.getSummaryResult());
 
         return novelSummary.getSummaryNo();
     }

@@ -16,14 +16,12 @@ public class NovelCreate {
     private String novelTitle;
     private String novelContent;
     private String novelGenre;
-    private List<Files> files;
 
     @Builder
-    public NovelCreate(String novelTitle, String novelContent, String novelGenre, List<Files> files) {
+    public NovelCreate(String novelTitle, String novelContent, String novelGenre) {
         this.novelTitle = novelTitle;
         this.novelContent = novelContent;
         this.novelGenre = novelGenre;
-        this.files = files;
     }
 
     public Novel toEntity(){
@@ -31,7 +29,6 @@ public class NovelCreate {
                 .novelTitle(novelTitle)
                 .novelContent(novelContent)
                 .novelGenre(novelGenre)
-                .files(files)
                 .build();
     }
 }

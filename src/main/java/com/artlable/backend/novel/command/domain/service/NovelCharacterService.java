@@ -28,7 +28,7 @@ public class NovelCharacterService {
     @Transactional(readOnly = true)
     public List<NovelReadCharacter> findAllNovelCharacters() {
 
-        List<NovelCharacter> characters = novelCharacterRepository.findByCharacterIsDeletedFalseOrderByCharacterNoDesc();
+        List<NovelCharacter> characters = novelCharacterRepository.findAll();
         List<NovelReadCharacter> characterList = new ArrayList<>();
 
         for (NovelCharacter novelCharacter : characters) {
@@ -52,6 +52,29 @@ public class NovelCharacterService {
     // 캐릭터 생성
     @Transactional
     public Long createCharacter(NovelCreateCharacter novelCreateCharacter, String accessToken) {
+
+        // 토큰의 유효성 검사
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+
+        // accessToken을 사용하여 사용자를 인증하고 해당 사용자의 정보를 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        NovelCharacter novelCharacter = novelCreateCharacter.toEntity();
+        novelCharacter.setMember(member);
+
+        novelCharacterRepository.save(novelCharacter);
+
+        return novelCharacter.getCharacterNo();
+    }
+
+    // 소설에 캐릭터 추가
+    @Transactional
+    public Long novelCreateCharacter(NovelCreateCharacter novelCreateCharacter, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -97,7 +120,6 @@ public class NovelCharacterService {
         novelCharacter.setCharacterGender(updateCharacter.getCharacterGender());
         novelCharacter.setCharacterAppearance(updateCharacter.getCharacterAppearance());
         novelCharacter.setCharacterPersonality(updateCharacter.getCharacterPersonality());
-        novelCharacter.setCharacterResult(updateCharacter.getCharacterResult());
 
         return novelCharacter.getCharacterNo();
     }
