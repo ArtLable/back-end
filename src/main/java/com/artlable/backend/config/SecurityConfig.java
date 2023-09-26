@@ -54,7 +54,9 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/feeds/**").permitAll() //피드
                 .antMatchers("/api/v1/files/**").permitAll() //파일
                 .antMatchers("/api/v1/novels/**").permitAll() // 소설
-                .antMatchers("/api/v1/webtoons/**").permitAll() // 소설
+                .antMatchers("/api/v1/characters/**").permitAll() // 캐릭터
+                .antMatchers("/api/v1/summaries/**").permitAll() // 요약
+                .antMatchers("/api/v1/webtoons/**").permitAll() // 웹툰
                 .antMatchers( //swagger
                         "/swagger-ui/**",
                         "/v2/api-docs",

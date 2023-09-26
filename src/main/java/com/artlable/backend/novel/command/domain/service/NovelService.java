@@ -7,7 +7,11 @@ import com.artlable.backend.novel.command.application.dto.novel.NovelCreateDTO;
 import com.artlable.backend.novel.command.application.dto.novel.NovelReadDTO;
 import com.artlable.backend.novel.command.application.dto.novel.NovelUpdateDTO;
 import com.artlable.backend.novel.command.domain.aggregate.entity.Novel;
+import com.artlable.backend.novel.command.domain.aggregate.entity.NovelCharacter;
+import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
+import com.artlable.backend.novel.command.domain.repository.NovelCharacterRepository;
 import com.artlable.backend.novel.command.domain.repository.NovelRepository;
+import com.artlable.backend.novel.command.domain.repository.NovelSummaryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ import java.util.List;
 public class NovelService {
 
     private final NovelRepository novelRepository;
+    private final NovelCharacterRepository novelCharacterRepository;
+    private final NovelSummaryRepository novelSummaryRepository;
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
@@ -119,5 +125,25 @@ public class NovelService {
         }
 
         return novel.getNovelNo();
+    }
+
+    @Transactional
+    public void mapEntities(Long novelNo, Long characterNo, Long summaryNo, String accessToken) {
+
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+
+        Novel novel = novelRepository.findById(novelNo)
+                .orElseThrow(() -> new IllegalArgumentException("Novel not found: " + novelNo));
+
+        NovelCharacter character = novelCharacterRepository.findById(characterNo)
+                .orElseThrow(() -> new IllegalArgumentException("Character not found: " + characterNo));
+
+        NovelSummary summary = novelSummaryRepository.findById(summaryNo)
+                .orElseThrow(() -> new IllegalArgumentException("Summary not found: " + summaryNo));
+
+        novel.addCharacter(character);
+        novel.addSummary(summary);
     }
 }

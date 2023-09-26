@@ -80,6 +80,10 @@ public class NovelCharacter extends AuditingFields {
         this.characterPersonality = characterPersonality;
     }
 
+    public void setNovel(Novel novel) {
+        this.novel = novel;
+    }
+
     public void setCharacterIsDeleted(Boolean characterIsDeleted) {
         this.characterIsDeleted = characterIsDeleted;
     }

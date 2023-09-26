@@ -75,6 +75,22 @@ public class NovelController {
         }
     }
 
+    @ApiOperation(value = "소설 연결")
+    @PostMapping(value = "/novels/connect")
+    public ResponseEntity<ResponseMessage> mapEntities(
+            @RequestParam Long novelNo,
+            @RequestParam Long characterNo,
+            @RequestParam Long summaryNo,
+            @RequestHeader("Authorization") String accessToken) {
+
+        try {
+            novelService.mapEntities(novelNo, characterNo, summaryNo, accessToken);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(HttpStatus.OK.value(), "소설 생성 성공", null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
+        }
+    }
+
     @ApiOperation(value = "소설 수정")
     @PutMapping("/novels/{novelNo}")
     public ResponseEntity<?> modifyInfo(@PathVariable Long novelNo,

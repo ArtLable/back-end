@@ -92,8 +92,15 @@ public class Novel extends AuditingFields {
         this.summaries = summaries;
     }
 
-
     public void setFiles(List<Files> files) {
         this.files = files;
+    }
+    public void addCharacter(NovelCharacter character) {
+        this.characters.add(character);
+        character.setNovel(this); // 양방향 연관관계 설정
+    }
+    public void addSummary(NovelSummary summary) {
+        this.summaries.add(summary);
+        summary.setNovel(this); // 양방향 연관관계 설정
     }
 }
