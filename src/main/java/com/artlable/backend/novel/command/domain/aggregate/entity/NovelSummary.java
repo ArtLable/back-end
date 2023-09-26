@@ -51,6 +51,9 @@ public class NovelSummary extends AuditingFields {
         this.member = member;
     }
 
+    public void setNovel(Novel novel) {
+        this.novel = novel;
+    }
     public void setSummaryNo(Long summaryNo) {
         this.summaryNo = summaryNo;
     }

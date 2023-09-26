@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -94,25 +96,22 @@ public class LearningService {
         Learning learning = learningRepository.findById(learningNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Learning을 찾을 수 없습니다."));
 
-        // Base64 인코딩된 문자열을 MultipartFile로 변환하여 저장
-        for (String image : resultImages) {
-            // Base64 문자열을 byte[]로 변환
-            byte[] fileBytes = Base64.getDecoder().decode(image);
+        // 인증된 사용자 찾기
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-            // byte[]를 MultipartFile로 변환
-            MultipartFile resultFile = new BASE64DecodedMultipartFile(fileBytes, "result_" + System.currentTimeMillis() + ".jpg");
+        // 파일저장 호출
+        List<CreateWebtoonLerningFileRequestDTO> savedFiles = fileService.saveResultImages(learningNo, resultImages, accessToken);
 
-            // 파일 저장
-            List<CreateWebtoonLerningFileRequestDTO> savedFiles = fileService.WebtoonLearningSaveFile(List.of(resultFile), learningNo, accessToken);
-
-            // Learning 엔터티의 resultFiles에 추가
-            for (CreateWebtoonLerningFileRequestDTO savedFile : savedFiles) {
-                Files fileEntity = fileRepository.findById(savedFile.getFileNo())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 파일을 찾을 수 없습니다."));
-                learning.getResultFiles().add(fileEntity);
-            }
+        for (CreateWebtoonLerningFileRequestDTO savedFile : savedFiles) {
+            Files fileEntity = fileRepository.findById(savedFile.getFileNo())
+                    .orElseThrow(() -> new IllegalArgumentException("해당 파일을 찾을 수 없습니다."));
+            learning.getResultFiles().add(fileEntity);
         }
     }
+
 
     // 학습 수정
     @Transactional

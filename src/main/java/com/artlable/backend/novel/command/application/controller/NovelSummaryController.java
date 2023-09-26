@@ -63,7 +63,7 @@ public class NovelSummaryController {
     @ApiOperation(value = "요약 생성")
     @PostMapping(value = "/summaries", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseMessage> createSummary(
-            @RequestBody NovelCreateSummaryDTO requestDTO,
+            @ModelAttribute NovelCreateSummaryDTO requestDTO,
             @RequestHeader("Authorization") String accessToken) {
 
         try {

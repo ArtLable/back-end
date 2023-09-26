@@ -10,6 +10,8 @@ import com.artlable.backend.files.command.domain.repository.FilesRepository;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
+import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
+import com.artlable.backend.webtoon.command.domain.repository.LearningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -18,18 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +34,8 @@ public class FileService {
     private final FilesRepository fileRepository;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final LearningRepository learningRepository;
+
     //파일 업로드
     @Transactional
     public List<FileRequestDTO> saveFiles(List<MultipartFile> files) throws UnsupportedEncodingException, NoSuchAlgorithmException {
@@ -109,7 +107,7 @@ public class FileService {
         Member member = memberRepository.findMemberByMemberEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        if (!(files==null||!files.isEmpty())) {
+        if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("파일을 첨부해 주세요.");
         }
 
@@ -173,6 +171,60 @@ public class FileService {
             }
         }
         return multiFilesWriteDTOList;
+    }
+
+    //json 파일로 변환 저장
+    @Transactional
+    public List<CreateWebtoonLerningFileRequestDTO> saveResultImages(Long learningNo, List<String> resultImages, String accessToken) throws IOException, NoSuchAlgorithmException {
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String userEmail = authentication.getName();
+        Member member = memberRepository.findMemberByMemberEmail(userEmail)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        Learning learning = learningRepository.findById(learningNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Learning을 찾을 수 없습니다."));
+
+        String uploadRoot = Paths.get(System.getProperty("user.home"))
+                .resolve("toon-maker")
+                .resolve("toon-maker-frontend")
+                .resolve("public")
+                .resolve("upload")
+                .toString();
+
+        File directory = new File(uploadRoot);
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IllegalArgumentException("파일 디렉토리 생성에 실패했습니다.");
+        }
+
+        List<CreateWebtoonLerningFileRequestDTO> savedFiles = new ArrayList<>();
+        for (int i = 0; i < resultImages.size(); i++) {
+            String image = resultImages.get(i);
+            byte[] fileBytes = Base64.getDecoder().decode(image);
+
+            String fileName = (i + 1) + ".jpg";
+            String filePath = uploadRoot + File.separator + fileName;
+
+            try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                fos.write(fileBytes);
+            }
+
+            CreateWebtoonLerningFileRequestDTO fileDTO = CreateWebtoonLerningFileRequestDTO.builder()
+                    .originFileName(fileName)
+                    .fileName(fileName)
+                    .filePath(filePath)
+                    .inputLearningNo(learningNo)
+                    .memberNo(member.getMemberNo())
+                    .build();
+
+            fileRepository.save(fileDTO.toEntity());
+            savedFiles.add(fileDTO);
+        }
+
+        return savedFiles;
     }
 
     @Transactional
@@ -254,7 +306,7 @@ public class FileService {
         return requestDTO;
     }
 
-    //웹툰 요약
+    //웹툰 학습
     public List<CreateWebtoonLerningFileRequestDTO> WebtoonLearningSaveFile(List<MultipartFile> files, Long inputLearningNo, String accessToken) throws UnsupportedEncodingException, NoSuchAlgorithmException {
 
         if (!tokenProvider.validateToken(accessToken)) {
@@ -322,7 +374,7 @@ public class FileService {
                         .originFileName(originFileName)
                         .fileName(fileName+"."+fileType[1])
                         .filePath(filePath)
-                        .InputLearningNo(inputLearningNo)
+                        .inputLearningNo(inputLearningNo)
                         .memberNo(member.getMemberNo())
                         .build();
                 fileRepository.save(createNovelSummaryFileRequestDTO.toEntity());
@@ -369,6 +421,8 @@ public class FileService {
         }
     }
 
+
+
     //사진 주소 리턴
     public String getImageUrl(Long fileNo) throws FileNotFoundException {
         Files files = fileRepository.findById(fileNo)
@@ -385,5 +439,6 @@ public class FileService {
         // 이미지 파일의 URL을 반환
         return filePath.toString();
     }
+
 
 }

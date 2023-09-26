@@ -20,18 +20,21 @@ public class CreateWebtoonLerningFileRequestDTO {
 
     private Long memberNo;
 
-    private Long InputLearningNo;
+    private Long inputLearningNo;
+
+    private Long resultLearningNo;
 
 
     @Builder
     public CreateWebtoonLerningFileRequestDTO(Long fileNo, String originFileName, String fileName, String filePath,
-                                              Long memberNo, Long InputLearningNo){
+                                              Long memberNo, Long inputLearningNo, Long resultLearningNo){
         this.fileNo = fileNo;
         this.originFileName = originFileName;
         this.fileName = fileName;
         this.filePath = filePath;
         this.memberNo = memberNo;
-        this.InputLearningNo = InputLearningNo;
+        this.inputLearningNo = inputLearningNo;
+        this.resultLearningNo = resultLearningNo;
     }
 
     public Files toEntity(){
@@ -42,7 +45,8 @@ public class CreateWebtoonLerningFileRequestDTO {
                 .filesIsDeleted(false)
                 .filePath(this.filePath)
                 .member(Member.builder().memberNo(this.memberNo).build())
-                .inputLearning(Learning.builder().learningNo(this.InputLearningNo).build())
+                .inputLearning(Learning.builder().learningNo(this.inputLearningNo).build())
+//                .resultLearning(resultLearningNo)
                 .build();
     }
 }
