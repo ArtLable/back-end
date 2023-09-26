@@ -19,6 +19,9 @@ public class NovelCharacter extends AuditingFields {
     private Long characterNo;
 
     @Column
+    private String characterTitle;
+
+    @Column
     private String characterName;
 
     @Column
@@ -29,6 +32,9 @@ public class NovelCharacter extends AuditingFields {
 
     @Column
     private String characterPersonality;
+
+    @Column
+    private String characterGenre;
 
     @Column
     private Boolean characterIsDeleted;
@@ -47,13 +53,15 @@ public class NovelCharacter extends AuditingFields {
 
 
     @Builder
-    public NovelCharacter(Long characterNo, String characterName, String characterGender, String characterAppearance,
-                          String characterPersonality, Boolean characterIsDeleted, Novel novel, List<Files> files, Member member) {
+    public NovelCharacter(Long characterNo, String characterTitle, String characterName, String characterGender, String characterAppearance,
+                          String characterPersonality, String characterGenre, Boolean characterIsDeleted, Novel novel, List<Files> files, Member member) {
         this.characterNo = characterNo;
+        this.characterTitle = characterTitle;
         this.characterName = characterName;
         this.characterGender = characterGender;
         this.characterAppearance = characterAppearance;
         this.characterPersonality = characterPersonality;
+        this.characterGenre = characterGenre;
         this.characterIsDeleted = characterIsDeleted;
         this.novel = novel;
         this.files = files;

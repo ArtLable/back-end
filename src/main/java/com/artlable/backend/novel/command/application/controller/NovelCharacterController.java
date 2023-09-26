@@ -2,8 +2,10 @@ package com.artlable.backend.novel.command.application.controller;
 
 import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.files.command.application.service.FileService;
+import com.artlable.backend.files.command.application.service.ResultFileService;
 import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelCreateCharacterDTO;
 import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelReadCharacterDTO;
+import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelResultCharacterDTO;
 import com.artlable.backend.novel.command.application.dto.novelcharacter.NovelUpdateCharacterDTO;
 import com.artlable.backend.novel.command.domain.service.NovelCharacterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,8 +27,7 @@ import java.util.Map;
 public class NovelCharacterController {
 
     private final NovelCharacterService novelCharacterService;
-    private final FileService fileService;
-    private final ObjectMapper objectMapper;
+    private final ResultFileService resultFileService;
 
     @ApiOperation(value = "전체 캐릭터 조회")
     @GetMapping("/characters")
@@ -66,12 +67,17 @@ public class NovelCharacterController {
 
         try {
             Long characterNo = novelCharacterService.createCharacter(requestDTO, accessToken);
-            Map<String, Object> responseMap = new HashMap<>();
 
-            responseMap.put("characterNo",characterNo);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(HttpStatus.CREATED.value(), "캐릭터 생성 성공",responseMap));
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(),null));
+            // ResultFileService의 saveImage 메서드 호출
+            List<NovelResultCharacterDTO> resultCharacterDTOs = resultFileService.saveImage(requestDTO, accessToken, characterNo);
+
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("characterNo", characterNo);
+            responseMap.put("resultCharacters", resultCharacterDTOs); // 결과도 같이 반환
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage(HttpStatus.CREATED.value(), "캐릭터 생성 성공", responseMap));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
         }
     }
 

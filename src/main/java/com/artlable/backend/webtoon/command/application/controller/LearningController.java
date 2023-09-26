@@ -3,6 +3,7 @@ package com.artlable.backend.webtoon.command.application.controller;
 import com.artlable.backend.common.ResponseMessage;
 import com.artlable.backend.files.command.application.dto.webtoon.CreateWebtoonLerningFileRequestDTO;
 import com.artlable.backend.files.command.application.service.FileService;
+import com.artlable.backend.files.command.application.service.ResultFileService;
 import com.artlable.backend.webtoon.command.application.dto.learning.LearningCreateDTO;
 import com.artlable.backend.webtoon.command.application.dto.learning.LearningReadDTO;
 import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdateDTO;
@@ -28,6 +29,7 @@ public class LearningController {
 
     private final LearningService learningService;
     private final FileService fileService;
+    private final ResultFileService resultFileService;
 
 
     @ApiOperation(value = "전체 학습 조회")
@@ -68,7 +70,7 @@ public class LearningController {
 
         try {
             Long learningNo = learningService.createLearning(requestDTO, accessToken);
-            List<CreateWebtoonLerningFileRequestDTO> fileRequestDTO = fileService.WebtoonLearningSaveFile(requestDTO.getFiles(), learningNo, accessToken);
+            List<CreateWebtoonLerningFileRequestDTO> fileRequestDTO = resultFileService.WebtoonLearningSaveFile(requestDTO.getFiles(), learningNo, accessToken);
 
             learningService.callExternalServiceAndSaveResult(learningNo, requestDTO.getFiles(), requestDTO.getCname(), requestDTO.getSearchText(), accessToken);
 
