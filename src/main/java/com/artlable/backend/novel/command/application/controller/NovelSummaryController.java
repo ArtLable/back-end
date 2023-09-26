@@ -9,15 +9,13 @@ import com.artlable.backend.novel.command.application.dto.novelsummary.NovelRead
 import com.artlable.backend.novel.command.application.dto.novelsummary.NovelUpdateSummaryDTO;
 import com.artlable.backend.novel.command.domain.service.NovelSummaryService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.HashMap;
 import java.util.List;

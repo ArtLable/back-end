@@ -1,9 +1,5 @@
 package com.artlable.backend.webtoon.command.application.dto.learning;
 
-import com.artlable.backend.files.command.application.dto.webtoon.CreateWebtoonLerningFileRequestDTO;
-import com.artlable.backend.files.command.domain.aggregate.entity.Files;
-import com.artlable.backend.member.command.domain.aggregate.entity.Member;
-import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
 import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
 import lombok.AccessLevel;
 import lombok.Builder;

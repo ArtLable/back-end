@@ -1,6 +1,5 @@
 package com.artlable.backend.novel.command.application.dto.novelsummary;
 
-import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
 import lombok.AccessLevel;

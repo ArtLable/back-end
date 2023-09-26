@@ -1,6 +1,5 @@
 package com.artlable.backend.webtoon.command.application.service;
 
-import com.artlable.backend.common.Base64ToFile;
 import com.artlable.backend.files.command.application.dto.webtoon.CreateWebtoonLerningFileRequestDTO;
 import com.artlable.backend.files.command.application.service.FileService;
 import com.artlable.backend.files.command.domain.aggregate.entity.Files;
@@ -91,7 +90,6 @@ public class LearningService {
     public void callExternalServiceAndSaveResult(Long learningNo, List<MultipartFile> files, String cname, String search_text, String accessToken) throws IOException, NoSuchAlgorithmException {
         // 외부 서비스 호출
         List<String> resultImages = learningWebtoonService.sendFilesAndRetrieveImages(files, cname, search_text);
-
         // Learning 엔터티 찾기
         Learning learning = learningRepository.findById(learningNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 Learning을 찾을 수 없습니다."));
@@ -102,7 +100,7 @@ public class LearningService {
             byte[] fileBytes = Base64.getDecoder().decode(image);
 
             // byte[]를 MultipartFile로 변환
-            MultipartFile resultFile = new BASE64DecodedMultipartFile(fileBytes, "result_" + System.currentTimeMillis() + ".png");
+            MultipartFile resultFile = new BASE64DecodedMultipartFile(fileBytes, "result_" + System.currentTimeMillis() + ".jpg");
 
             // 파일 저장
             List<CreateWebtoonLerningFileRequestDTO> savedFiles = fileService.WebtoonLearningSaveFile(List.of(resultFile), learningNo, accessToken);
@@ -114,9 +112,6 @@ public class LearningService {
                 learning.getResultFiles().add(fileEntity);
             }
         }
-
-        // Learning 엔터티 업데이트
-        learningRepository.save(learning);
     }
 
     // 학습 수정
