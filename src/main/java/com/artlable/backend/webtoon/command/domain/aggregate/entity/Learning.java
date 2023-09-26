@@ -22,25 +22,35 @@ public class Learning extends AuditingFields {
     private Long learningNo;
 
     @Column
-    private String learningContent;
+    private String cname;
+
+    @Column
+    private String searchText;
 
     @Column
     private Boolean learningIsDeleted;
 
-    @OneToMany(mappedBy = "feed",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "inputLearning", cascade = CascadeType.REMOVE)
     @OrderBy("fileNo asc")
-    private List<Files> files;
+    private List<Files> inputFiles;
+
+    @OneToMany(mappedBy = "resultLearning", cascade = CascadeType.REMOVE)
+    @OrderBy("fileNo asc")
+    private List<Files> resultFiles;
 
     @ManyToOne
     @JoinColumn
     private Member member;
 
     @Builder
-    public Learning(Long learningNo, String learningContent, Boolean learningIsDeleted, List<Files> files, Member member) {
+    public Learning(Long learningNo, String canme ,String searchText,  Boolean learningIsDeleted, List<Files> inputFiles,
+                    List<Files> resultFiles, Member member) {
         this.learningNo = learningNo;
-        this.learningContent = learningContent;
+        this.cname = canme;
+        this.searchText = searchText;
         this.learningIsDeleted = learningIsDeleted;
-        this.files = files;
+        this.inputFiles = inputFiles;
+        this.resultFiles = resultFiles;
         this.member = member;
     }
 
@@ -48,16 +58,20 @@ public class Learning extends AuditingFields {
         this.learningNo = learningNo;
     }
 
-    public void setLearningContent(String learningContent) {
-        this.learningContent = learningContent;
-    }
-
     public void setLearningIsDeleted(Boolean learningIsDeleted) {
         this.learningIsDeleted = learningIsDeleted;
     }
 
-    public void setFiles(List<Files> files) {
-        this.files = files;
+    public void setCname(String cname) {
+        this.cname = cname;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
+    }
+
+    public void setFiles(List<Files> inputFiles) {
+        this.inputFiles = inputFiles;
     }
 
     public void setMember(Member member) {

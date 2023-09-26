@@ -1,12 +1,11 @@
 package com.artlable.backend.feed.command.application.dto.create;
 
 import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
-import com.artlable.backend.files.command.application.dto.FileRequestDTO;
-import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,12 +15,13 @@ public class FeedCreateRequestDTO {
 
     private String feedContent;
     private String feedCategory;
+    private List<MultipartFile> files;
 
     @Builder
-    public FeedCreateRequestDTO(String feedContent, String feedCategory) {
-
+    public FeedCreateRequestDTO(String feedContent, String feedCategory, List<MultipartFile> files) {
         this.feedContent = feedContent;
         this.feedCategory = feedCategory;
+        this.files = files;
     }
 
     //DTO -> Entity

@@ -6,6 +6,7 @@ import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.novel.command.domain.aggregate.entity.Novel;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelCharacter;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelSummary;
+import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
 import lombok.*;
 
 import javax.persistence.*;
@@ -52,9 +53,18 @@ public class Files extends AuditingFields {
     @JoinColumn(name = "novelSummary_no")
     private NovelSummary novelSummary;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "input_learning_no")
+    private Learning inputLearning;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "result_learning_no")
+    private Learning resultLearning;
+
     @Builder
     public Files(Long fileNo, String originFileName, String fileName, Boolean filesIsDeleted,
-                 String filePath, Member member, Feed feed, Novel novel, NovelCharacter novelCharacter, NovelSummary novelSummary) {
+                 String filePath, Member member, Feed feed, Novel novel, NovelCharacter novelCharacter,
+                 NovelSummary novelSummary,Learning inputLearning, Learning resultLearning) {
         this.fileNo = fileNo;
         this.fileName = fileName;
         this.originFileName = originFileName;
@@ -65,6 +75,8 @@ public class Files extends AuditingFields {
         this.novel = novel;
         this.novelCharacter = novelCharacter;
         this.novelSummary = novelSummary;
+        this.inputLearning = inputLearning;
+        this.resultLearning = resultLearning;
     }
 
     public void setMemberNo(Member member) {

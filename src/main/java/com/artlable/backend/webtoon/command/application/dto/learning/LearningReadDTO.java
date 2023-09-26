@@ -6,24 +6,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LearningRead {
+public class LearningReadDTO {
 
     private Long learningNo;
-    private String learningContent;
-    private List<Long> fileNo;
+    private String cname;
+    private String searchText;
 
-    public LearningRead(Learning learning) {
+
+    public LearningReadDTO(Learning learning) {
         this.learningNo = learning.getLearningNo();
-        this.learningContent = learning.getLearningContent();
+        this.cname = learning.getCname();
+        this.searchText = learning.getSearchText();
+
     }
     @Builder
-    public LearningRead(Long learningNo, String learningContent, List<Long> fileNo) {
+    public LearningReadDTO(Long learningNo, String cname, String searchText) {
         this.learningNo = learningNo;
-        this.learningContent = learningContent;
-        this.fileNo = fileNo;
+        this.cname = cname;
+        this.searchText = searchText;
     }
 }

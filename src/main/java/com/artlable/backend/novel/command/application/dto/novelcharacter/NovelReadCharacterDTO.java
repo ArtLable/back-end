@@ -1,6 +1,6 @@
 package com.artlable.backend.novel.command.application.dto.novelcharacter;
 
-import com.artlable.backend.files.command.application.dto.ReadFeedFileResponseDTO;
+import com.artlable.backend.files.command.application.dto.feed.ReadFeedFileResponseDTO;
 import com.artlable.backend.novel.command.domain.aggregate.entity.NovelCharacter;
 import lombok.AccessLevel;
 import lombok.Builder;

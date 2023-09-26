@@ -1,14 +1,16 @@
-package com.artlable.backend.files.command.application.dto;
+package com.artlable.backend.files.command.application.dto.webtoon;
 
-import com.artlable.backend.feed.command.domain.aggregate.entity.Feed;
 import com.artlable.backend.files.command.domain.aggregate.entity.Files;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
+import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateFeedFileRequestDTO {
+public class CreateWebtoonLerningFileRequestDTO {
+
+    private Long fileNo;
 
     private String originFileName;
 
@@ -18,31 +20,29 @@ public class CreateFeedFileRequestDTO {
 
     private Long memberNo;
 
-    private Long feedNo;
+    private Long InputLearningNo;
+
 
     @Builder
-    public CreateFeedFileRequestDTO(String originFileName, String fileName, String filePath, Long memberNo, Long feedNo){
+    public CreateWebtoonLerningFileRequestDTO(Long fileNo, String originFileName, String fileName, String filePath,
+                                              Long memberNo, Long InputLearningNo){
+        this.fileNo = fileNo;
         this.originFileName = originFileName;
         this.fileName = fileName;
         this.filePath = filePath;
         this.memberNo = memberNo;
-        this.feedNo = feedNo;
-    }
-
-    public CreateFeedFileRequestDTO(String originFileName, String fileName, String filePath){
-        this.originFileName = originFileName;
-        this.fileName = fileName;
-        this.filePath = filePath;
+        this.InputLearningNo = InputLearningNo;
     }
 
     public Files toEntity(){
         return Files.builder()
+                .fileNo(this.fileNo)
                 .originFileName(this.originFileName)
                 .fileName(this.fileName)
                 .filesIsDeleted(false)
                 .filePath(this.filePath)
-                .feed(Feed.builder().feedNo(this.feedNo).build())
                 .member(Member.builder().memberNo(this.memberNo).build())
+                .inputLearning(Learning.builder().learningNo(this.InputLearningNo).build())
                 .build();
     }
 }

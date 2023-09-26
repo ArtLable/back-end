@@ -3,9 +3,9 @@ package com.artlable.backend.webtoon.command.application.service;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreate;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceRead;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdate;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreateDTO;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceReadDTO;
+import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdateDTO;
 import com.artlable.backend.webtoon.command.domain.aggregate.entity.Inference;
 import com.artlable.backend.webtoon.command.domain.repository.InferenceRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class InferenceService {
 
     // 전제 추론 조회
     @Transactional(readOnly = true)
-    public List<InferenceRead> findAllInfereces() {
+    public List<InferenceReadDTO> findAllInfereces() {
 
         List<Inference> inferences = inferenceRepository.findByInferenceIsDeletedFalseOrderByInferenceNoDesc();
-        List<InferenceRead> inferenceList = new ArrayList<>();
+        List<InferenceReadDTO> inferenceList = new ArrayList<>();
 
         for (Inference inference : inferences) {
-            InferenceRead inferenceRead = new InferenceRead(inference);
+            InferenceReadDTO inferenceRead = new InferenceReadDTO(inference);
             inferenceList.add(inferenceRead);
         }
 
@@ -41,17 +41,17 @@ public class InferenceService {
 
     // 특정 추론 조회
     @Transactional(readOnly = true)
-    public InferenceRead findInference(Long inferenceNo) {
+    public InferenceReadDTO findInference(Long inferenceNo) {
 
         Inference inference = inferenceRepository.findByInferenceNo(inferenceNo);
-        InferenceRead inferenceRead = new InferenceRead(inference);
+        InferenceReadDTO inferenceRead = new InferenceReadDTO(inference);
 
         return inferenceRead;
     }
 
     // 추론 생성
     @Transactional
-    public Long createInference(InferenceCreate inferenceCreate, String accessToken) {
+    public Long createInference(InferenceCreateDTO inferenceCreate, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -74,7 +74,7 @@ public class InferenceService {
 
     // 추론 수정
     @Transactional
-    public Long updateInference(Long inferenceNo, InferenceUpdate inferenceUpdate, String accessToken) {
+    public Long updateInference(Long inferenceNo, InferenceUpdateDTO inferenceUpdate, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {

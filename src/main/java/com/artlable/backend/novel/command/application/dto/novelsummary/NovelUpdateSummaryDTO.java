@@ -9,12 +9,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class NovelUpdateSummary {
+public class NovelUpdateSummaryDTO {
 
     private String summaryContent;
     private List<FileRequestDTO> filesList;
 
-    public NovelUpdateSummary(String summaryContent, List<FileRequestDTO> filesList) {
+    public NovelUpdateSummaryDTO(String summaryContent, List<FileRequestDTO> filesList) {
         this.summaryContent = summaryContent;
         this.filesList = filesList;
     }

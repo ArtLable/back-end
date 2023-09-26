@@ -11,14 +11,14 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class InferenceCreate {
+public class InferenceCreateDTO {
 
     private String inferenceContent;
     private String inferenceResult;
     private List<Files> files;
 
     @Builder
-    public InferenceCreate(String inferenceContent, String inferenceResult, List<Files> files) {
+    public InferenceCreateDTO(String inferenceContent, String inferenceResult, List<Files> files) {
         this.inferenceContent = inferenceContent;
         this.inferenceResult = inferenceResult;
         this.files = files;

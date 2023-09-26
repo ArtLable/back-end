@@ -1,24 +1,29 @@
 package com.artlable.backend.webtoon.command.application.service;
 
+import com.artlable.backend.files.command.application.dto.webtoon.CreateWebtoonLerningFileRequestDTO;
+import com.artlable.backend.files.command.application.service.FileService;
+import com.artlable.backend.files.command.domain.aggregate.entity.Files;
+import com.artlable.backend.files.command.domain.repository.FilesRepository;
 import com.artlable.backend.jwt.TokenProvider;
 import com.artlable.backend.member.command.domain.aggregate.entity.Member;
 import com.artlable.backend.member.command.domain.repository.MemberRepository;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceCreate;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceRead;
-import com.artlable.backend.webtoon.command.application.dto.inference.InferenceUpdate;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningCreate;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningRead;
-import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdate;
-import com.artlable.backend.webtoon.command.domain.aggregate.entity.Inference;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningCreateDTO;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningReadDTO;
+import com.artlable.backend.webtoon.command.application.dto.learning.LearningUpdateDTO;
 import com.artlable.backend.webtoon.command.domain.aggregate.entity.Learning;
 import com.artlable.backend.webtoon.command.domain.repository.LearningRepository;
-import com.artlable.backend.webtoon.command.infra.service.WebtoonAiService;
+import com.artlable.backend.webtoon.command.infra.service.BASE64DecodedMultipartFile;
+import com.artlable.backend.webtoon.command.infra.service.LearningWebtoonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -27,18 +32,20 @@ public class LearningService {
 
     private final LearningRepository learningRepository;
     private final MemberRepository memberRepository;
-    private final WebtoonAiService webtoonAiService;
+    private final FileService fileService;
+    private final FilesRepository fileRepository;
+    private final LearningWebtoonService learningWebtoonService;
     private final TokenProvider tokenProvider;
 
     // 전제 학습 조회
     @Transactional(readOnly = true)
-    public List<LearningRead> findAllLearnings() {
+    public List<LearningReadDTO> findAllLearnings() {
 
         List<Learning> learnings = learningRepository.findByLearningIsDeletedFalseOrderByLearningNoDesc();
-        List<LearningRead> learningList = new ArrayList<>();
+        List<LearningReadDTO> learningList = new ArrayList<>();
 
         for (Learning learning : learnings) {
-            LearningRead learningRead = new LearningRead(learning);
+            LearningReadDTO learningRead = new LearningReadDTO(learning);
             learningList.add(learningRead);
         }
 
@@ -47,17 +54,17 @@ public class LearningService {
 
     // 특정 학습 조회
     @Transactional(readOnly = true)
-    public LearningRead findLearning(Long learningNo) {
+    public LearningReadDTO findLearning(Long learningNo) {
 
         Learning learning = learningRepository.findByLearningNo(learningNo);
-        LearningRead learningRead = new LearningRead(learning);
+        LearningReadDTO learningRead = new LearningReadDTO(learning);
 
         return learningRead;
     }
 
     // 학습 생성
     @Transactional
-    public Long createLearning(LearningCreate learningCreate, String accessToken) {
+    public Long createLearning(LearningCreateDTO createDTO, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -70,7 +77,7 @@ public class LearningService {
         Member member = memberRepository.findMemberByMemberEmail(userEmail)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        Learning learning = learningCreate.toEntity();
+        Learning learning = createDTO.toEntity();
         learning.setMember(member);
 
         learningRepository.save(learning);
@@ -78,9 +85,38 @@ public class LearningService {
         return learning.getLearningNo();
     }
 
+    //api 호출
+    @Transactional
+    public void callExternalServiceAndSaveResult(Long learningNo, List<MultipartFile> files, String cname, String search_text, String accessToken) throws IOException, NoSuchAlgorithmException {
+        // 외부 서비스 호출
+        List<String> resultImages = learningWebtoonService.sendFilesAndRetrieveImages(files, cname, search_text);
+        // Learning 엔터티 찾기
+        Learning learning = learningRepository.findById(learningNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 Learning을 찾을 수 없습니다."));
+
+        // Base64 인코딩된 문자열을 MultipartFile로 변환하여 저장
+        for (String image : resultImages) {
+            // Base64 문자열을 byte[]로 변환
+            byte[] fileBytes = Base64.getDecoder().decode(image);
+
+            // byte[]를 MultipartFile로 변환
+            MultipartFile resultFile = new BASE64DecodedMultipartFile(fileBytes, "result_" + System.currentTimeMillis() + ".jpg");
+
+            // 파일 저장
+            List<CreateWebtoonLerningFileRequestDTO> savedFiles = fileService.WebtoonLearningSaveFile(List.of(resultFile), learningNo, accessToken);
+
+            // Learning 엔터티의 resultFiles에 추가
+            for (CreateWebtoonLerningFileRequestDTO savedFile : savedFiles) {
+                Files fileEntity = fileRepository.findById(savedFile.getFileNo())
+                        .orElseThrow(() -> new IllegalArgumentException("해당 파일을 찾을 수 없습니다."));
+                learning.getResultFiles().add(fileEntity);
+            }
+        }
+    }
+
     // 학습 수정
     @Transactional
-    public Long updateLearning(Long learningNo, LearningUpdate learningUpdate, String accessToken) {
+    public Long updateLearning(Long learningNo, LearningUpdateDTO learningUpdate, String accessToken) {
 
         // 토큰의 유효성 검사
         if (!tokenProvider.validateToken(accessToken)) {
@@ -99,7 +135,8 @@ public class LearningService {
             throw new IllegalArgumentException("해당 학습을 수정할 권한이 없습니다.");
         }
 
-        learning.setLearningContent(learningUpdate.getLearningContent());
+        learning.setCname(learningUpdate.getCname());
+        learning.setSearchText(learningUpdate.getSearchText());
 
         return learning.getLearningNo();
     }

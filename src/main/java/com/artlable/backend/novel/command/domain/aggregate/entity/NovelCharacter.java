@@ -45,6 +45,7 @@ public class NovelCharacter extends AuditingFields {
     @JoinColumn(name = "member_no")
     private Member member;
 
+
     @Builder
     public NovelCharacter(Long characterNo, String characterName, String characterGender, String characterAppearance,
                           String characterPersonality, Boolean characterIsDeleted, Novel novel, List<Files> files, Member member) {
