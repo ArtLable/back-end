@@ -79,9 +79,9 @@ For building and running the application you need:
 # Main Function 📦
 
 ---
-### ⭐️ Spring Security / Member / LOGIN -정재민
+### ⭐️ Spring Security / Member / LOGIN / File-정재민
 
-### ⭐️ Spring CRUD Feed / FILE - 정민호
+### ⭐️ Spring CRUD Feed / CRUD - 정민호
 
 ### ⭐️ REACT - 권은지
 
